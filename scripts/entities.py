@@ -42,6 +42,14 @@ class PhysicsEntity:
             self.rectedit=(170,255,50,50)
             self.rectTuongTacEdit=(165,100,70,200)
             self.rectAttack=(70,135,125,125,60)
+        elif self.type == "nguoisoi":
+            self.rectedit=(75,133,40,50)
+            self.rectTuongTacEdit=(70,45,50,130)
+            self.rectAttack=(70,45,50,75,-15)
+        elif self.type == "nguoisoido":
+            self.rectedit=(130,204,40,50)#  x,y,chieudai,chieu cao
+            self.rectTuongTacEdit=(75,140,140,110) # khung tuong tac tương tự
+            self.rectAttack=(70,100,100,100,85)    # khung tấn công thì phải thêm 1 biến 
              
 
         self.collision = {'up':False,'down':False,'right':False,'left':False}

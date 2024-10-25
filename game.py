@@ -4,9 +4,12 @@ import os
 import random
 import sys
 from scripts.utils import load_image,load_images,Animation
+from scripts.animation2 import get_frame,get_frames,Animation2
 from scripts.Player import Player
 from scripts.cungthu import CungThu
 from scripts.bosschim import BossChim
+from scripts.nguoisoi import NguoiSoi
+from scripts.nguoisoido import NguoiSoiDo
 from scripts.Enemy import Enemy
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
@@ -79,11 +82,25 @@ class Game:
             'player/jump':Animation(load_images('entities/player/jump',(95,125),(255,255,255))),
             'player/block':Animation(load_images('entities/player/block',(95,125),(255,255,255))),
             'player/hurt':Animation(load_images('entities/player/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
+
+
             
             'player/attack':Animation(load_images('entities/player/attack',(300,300),(255,255,255)),img_dur=5.5,loop=False),
             'particle/leaf': Animation(load_images('particles/leaf',(40,40),(0,0,0)), img_dur=30, loop=False),
             'particle/particle': Animation(load_images('particles/particle',(50,50),(0,0,0)), img_dur=12, loop=False),
             'particle/particlewukong': Animation(load_images('particles/particlewukong',(50,50),(0,0,0)), img_dur=12, loop=False),
+
+
+            #new monster
+            'nguoisoi/idle': Animation2(get_frames('\\images\\entities\\nguoisoi\\idle',2), img_dur=5,loop=True),
+            'nguoisoi/walk': Animation2(get_frames('\\images\\entities\\nguoisoi\\walk',2), img_dur=5,loop=True),
+
+
+            'nguoisoido/idle': Animation2(get_frames('\\images\\entities\\nguoisoido\\idle',2), img_dur=5,loop=True),
+            'nguoisoido/run': Animation2(get_frames('\\images\\entities\\nguoisoido\\run',2), img_dur=5,loop=True),
+            
+
+            
 
 
             'phanthan/idle':Animation(load_images('entities/player/idle',(95,125),(255,255,255)),img_dur=15),
@@ -249,7 +266,7 @@ class Game:
 
         #enemy
         self.enemies = []
-        for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1),('spawners', 2),('spawners', 3)]):
+        for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1),('spawners', 2),('spawners', 3),('spawners', 4),(('spawners', 5))]):
             if spawner['variant'] == 0:
                 self.player.pos = spawner['pos']
                 self.player.air_time =0
@@ -259,6 +276,10 @@ class Game:
                 self.enemies.append(CungThu(self, spawner['pos'], (75, 100)))
             if spawner['variant'] == 3:
                 self.enemies.append(BossChim(self, spawner['pos'], (75, 100)))
+            if spawner['variant'] == 4:
+                self.enemies.append(NguoiSoi(self, spawner['pos'], (75, 100)))
+            if spawner['variant'] == 5:
+                self.enemies.append(NguoiSoiDo(self, spawner['pos'], (75, 100)))
             
         self.projectiles = [] #đạn bắn
         self.particles = []

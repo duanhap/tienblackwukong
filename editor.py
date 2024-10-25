@@ -37,7 +37,7 @@ class Editor:
         
         #hien map nào
         try:
-           self.tilemap.load('2.json')
+           self.tilemap.load('1.json')
         except FileNotFoundError:
             pass
             
@@ -159,7 +159,7 @@ class Editor:
                     if event.key == pygame.K_t:
                         self.tilemap.autotile()
                     if event.key == pygame.K_o:
-                        self.tilemap.save('2.json')
+                        self.tilemap.save('1.json')
                     if event.key == pygame.K_LSHIFT:
                         self.shift = True
                 if event.type == pygame.KEYUP:

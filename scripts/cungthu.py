@@ -16,8 +16,8 @@ class CungThu(PhysicsEntity):
         self.banchua= False
         self.chuanbixong = True
         self.attacking = False
-        self.hp =1
-        self.hp_max = 1
+        self.hp =2
+        self.hp_max = 2
         self.dead = False
         self.air_time =0
        
