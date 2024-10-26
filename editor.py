@@ -24,6 +24,8 @@ class Editor:
             'large_decor':load_images('tiles/large_decor',None,(0,0,0),5),
             'stone':load_images('tiles/stone',(50,50),(0,0,0)),
             'stone2':load_images('tiles/stone2',(50,50),(255,255,255)),
+            'stonegrass':load_images('tiles/stonegrass',None,(0,0,0),2),
+            'ice':load_images('tiles/ice',None,(0,0,0),2),
             'spawners': load_images('tiles/spawners',(50,50),(0,0,0)),
             'tree':load_images('tiles/tree',None,(255,255,255),5),
             
@@ -37,7 +39,7 @@ class Editor:
         
         #hien map nào
         try:
-           self.tilemap.load('1.json')
+           self.tilemap.load('3.json')
         except FileNotFoundError:
             pass
             
@@ -159,7 +161,7 @@ class Editor:
                     if event.key == pygame.K_t:
                         self.tilemap.autotile()
                     if event.key == pygame.K_o:
-                        self.tilemap.save('1.json')
+                        self.tilemap.save('3.json')
                     if event.key == pygame.K_LSHIFT:
                         self.shift = True
                 if event.type == pygame.KEYUP:

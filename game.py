@@ -10,6 +10,7 @@ from scripts.cungthu import CungThu
 from scripts.bosschim import BossChim
 from scripts.nguoisoi import NguoiSoi
 from scripts.nguoisoido import NguoiSoiDo
+from scripts.npcsoi import NpcSoi
 from scripts.Enemy import Enemy
 from scripts.tilemap import Tilemap
 from scripts.clouds import Clouds
@@ -38,6 +39,7 @@ class Game:
        
         #load_image
         self.assets={
+            #background và decor
             'decor':load_images('tiles/decor',(50,50),(0,0,0)),# trả về 1 mảng ảnh png  
             'grass':load_images('tiles/grass',(50,50),(0,0,0)),
             'grass2':load_images('tiles/grass2',(50,50),(255,255,255)),
@@ -51,7 +53,18 @@ class Game:
             'introword':load_image('introword3.png',(1200,800),(0,0,0)),
             'tree':load_images('tiles/tree',None,(255,255,255),5),
             'clouds':load_images('clouds',None,(0,0,0)),
-            
+            'stonegrass':load_images('tiles/stonegrass',None,(0,0,0),2),
+            'ice':load_images('tiles/ice',None,(0,0,0),2),
+            'background3':load_image('background3.png',(1200,800)),
+
+
+
+
+
+
+
+
+            # nhan vật và enemy
             'enemy/idle': Animation(load_images('entities/enemy/idle',(75, 100),(0,0,0)), img_dur=6),
             'enemy/run': Animation(load_images('entities/enemy/run',(75,100),(0,0,0)), img_dur=4),
 
@@ -101,6 +114,11 @@ class Game:
             
 
             
+            #npc
+            'npcsoi/idle': Animation2(get_frames('\\images\\entities\\npcsoi\\idle',0.3), img_dur=8,loop=True),
+            'loithoainpc':Animation(load_images('entities/loithoai',(1200,400),(255,255,255)),img_dur=400,loop=True),
+
+
 
 
             'phanthan/idle':Animation(load_images('entities/player/idle',(95,125),(255,255,255)),img_dur=15),
@@ -113,6 +131,9 @@ class Game:
             'phanthan/die':Animation(load_images('entities/player/die',(200,200),(0,0,0)),img_dur=10,loop=False),
 
 
+
+
+            #loại đạn 
             'gun': load_image('gun.png',(25,25),(0,0,0)),
             'projectile': load_image('projectile.png',(20,15),(0,0,0)),
             'cungten1': load_image('cungten1.png',(80,6),(0,0,0)),
@@ -266,7 +287,10 @@ class Game:
 
         #enemy
         self.enemies = []
-        for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1),('spawners', 2),('spawners', 3),('spawners', 4),(('spawners', 5))]):
+        self.npc=[]
+        for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1),('spawners', 2),
+                                             ('spawners', 3),('spawners', 4),('spawners', 5),
+                                             ('spawners', 6)]):
             if spawner['variant'] == 0:
                 self.player.pos = spawner['pos']
                 self.player.air_time =0
@@ -280,6 +304,8 @@ class Game:
                 self.enemies.append(NguoiSoi(self, spawner['pos'], (75, 100)))
             if spawner['variant'] == 5:
                 self.enemies.append(NguoiSoiDo(self, spawner['pos'], (75, 100)))
+            if spawner['variant'] == 6:
+                self.npc.append(NpcSoi(self, spawner['pos'], (75, 100)))
             
         self.projectiles = [] #đạn bắn
         self.particles = []
@@ -351,6 +377,8 @@ class Game:
         while True:
 
             # Kiểm tra và phát nhạc phù hợp với level hiện tại
+
+            # set nhạc cho mỗi map
             if self.level == 0 and current_music != 'intro':
                 self.anhem=0
 
@@ -366,11 +394,14 @@ class Game:
                 pygame.mixer.music.set_volume(0.5)
                 pygame.mixer.music.play(-1)
                 current_music = 'khoidau'
-            if self.level==2 and len(self.enemies) ==0:
+            """
+             if self.level==2 and len(self.enemies) ==0:
                 self.clip = VideoFileClip("data/ending.mp4")
                 self.show_ending_video()
                 #restart game 
                 os.execv(sys.executable, ['game'] + sys.argv)
+            """
+           
                 
            
             #camera theo player
@@ -379,7 +410,7 @@ class Game:
             render_scroll =(int(self.scroll[0]),int(self.scroll[1]))
 
         
-            #BG
+            # set BG cho mỗi map
             if self.level ==0 :
                 
                 if self.fullscreen:
@@ -389,12 +420,8 @@ class Game:
                     render_scroll=(-290,-200)
                 else:
                     self.screen.blit(self.assets['intro'],(0,0))
-                    render_scroll=(0,0)
-                
-                
-                
-                
-            else:
+                    render_scroll=(0,0)     
+            elif self.level ==1:
                 if self.fullscreen:
                     info = pygame.display.Info()
                     self.assets['background'] =load_image('background.png',(info.current_w,info.current_h))
@@ -402,7 +429,24 @@ class Game:
                     self.assets['background'] =load_image('background.png',(1200,800))
             
                 self.screen.blit(self.assets['background'],(0,0))
-                
+            elif self.level ==2:
+                if self.fullscreen:
+                    info = pygame.display.Info()
+                    self.assets['background'] =load_image('background.png',(info.current_w,info.current_h))
+                else:
+                    self.assets['background'] =load_image('background.png',(1200,800))
+            
+                self.screen.blit(self.assets['background'],(0,0))
+            
+            elif self.level ==3:
+                if self.fullscreen:
+                    info = pygame.display.Info()
+                    self.assets['background3'] =load_image('background3.png',(info.current_w,info.current_h))
+                else:
+                    self.assets['background3'] =load_image('background3.png',(1200,800))
+            
+                self.screen.blit(self.assets['background3'],(0,0))
+
 
             #rung lắc
             self.screenshake = max(0,self.screenshake-1)
@@ -433,7 +477,7 @@ class Game:
                 if self.tilemap.solid_check(projectile[0]):
                     self.projectiles.remove(projectile)
                     if  projectile[3] =='kiemnangluong1' or projectile[3] =='kiemnangluong2':
-                        if random.randint(0,100)<25:
+                        if random.randint(0,100)<45:
                              self.screenshake = max(40,self.screenshake)
                         for i in range(20):
                             self.sparks.append(Spark(projectile[0], random.random() - 0.5 + (math.pi if projectile[1] > 0 else 0), 5 + random.random()))
@@ -517,6 +561,8 @@ class Game:
                 phanthan.render(self.screen, offset=render_scroll)
                 if kill:
                          self.phanthans.remove(phanthan)
+           
+                
                     
                
 
@@ -644,7 +690,7 @@ class Game:
               
 
            
-            
+           
 
             #cloud1
             self.clouds1.update()
@@ -663,7 +709,10 @@ class Game:
                 self.screen.blit(self.assets['binhruou'],(50,595+tang))    
 
          
-
+             #npc
+            for npc1 in self.npc.copy():
+                npc1.update(self.tilemap, (0, 0))
+                npc1.render(self.screen, offset=render_scroll)
             #print(self.tilemap.physics_rects_around(self.player.pos))
             for event in pygame.event.get(): #get the input,click , keosv..vv
                 if event.type == pygame.QUIT: #click dau X để thoát
