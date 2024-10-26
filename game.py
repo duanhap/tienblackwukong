@@ -117,6 +117,9 @@ class Game:
             #npc
             'npcsoi/idle': Animation2(get_frames('\\images\\entities\\npcsoi\\idle',0.3), img_dur=8,loop=True),
             'loithoainpc':Animation(load_images('entities/loithoai',(1200,400),(255,255,255)),img_dur=400,loop=True),
+            'loithoaichim':Animation(load_images('entities/bosschim/loithoai',(1000,300),(255,255,255)),img_dur=300,loop=True),
+
+            
 
 
 

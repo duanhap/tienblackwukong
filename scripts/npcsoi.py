@@ -13,7 +13,7 @@ class NpcSoi(PhysicsEntity):
         self.attacking = False
         self.walking = 0
         self.dan=''
-        self.loithoai =  Loithoai(self.game)
+        self.loithoai =  Loithoai(self.game,'npc')
         
     def update(self, tilemap, movement=(0, 0)):
         if self.walking:# xử lý đi trên vùng ok , chạm trái phải thì lật
@@ -34,7 +34,7 @@ class NpcSoi(PhysicsEntity):
         if abs(dis[0])<100:
             
             self.loithoai.update()
-            self.loithoai.render(self.game.screen)
+            self.loithoai.render(self.game.screen,(0,400))
             
          
             

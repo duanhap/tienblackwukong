@@ -7,6 +7,7 @@ import pygame
 from scripts.particle import Particle
 from scripts.spark import Spark
 from scripts.utils import load_image,load_images,Animation
+from scripts.loithoai import Loithoai
 class BossChim(PhysicsEntity):
     def __init__(self, game, pos, size,isMainBoss = True):
         super().__init__(game, 'bosschim', pos, size)
@@ -25,6 +26,8 @@ class BossChim(PhysicsEntity):
         self.attacking = False
         self.mainBoss = isMainBoss
         self.soLanPhanthan=2
+        self.loithoai =  Loithoai(self.game,'bosschim')
+        self.demthoigiannoi =0
 
 
        
@@ -35,6 +38,17 @@ class BossChim(PhysicsEntity):
     def update(self, tilemap, movement=(0, 0)):
             #print(self.pos[0],self.pos[1])
             if not self.dead  :
+                #loi noi
+                disloinoi = (self.game.player.pos[0] - self.pos[0], self.game.player.pos[1] - self.pos[1])
+       
+                self.demthoigiannoi+=1
+                if abs(disloinoi[0])<1500 and self.demthoigiannoi <300: 
+                    self.loithoai.update()
+                    if self.game.fullscreen:
+                         self.loithoai.render(self.game.screen,(720,70))
+                    else: self.loithoai.render(self.game.screen,(200,0))
+                if self.demthoigiannoi >1200:
+                    self.demthoigiannoi =0
                 if random.randint(0,100)<5 and len(self.game.enemies)<9 and self.hp<= 4 and self.mainBoss==True and self.soLanPhanthan>0:
                      self.game.enemies.append(BossChim(self.game, self.pos, (75, 100),False))
                      self.game.enemies[len( self.game.enemies)-1].hp = 2
@@ -45,7 +59,9 @@ class BossChim(PhysicsEntity):
 
                 self.air_time+=1
                 if self.air_time>80:
-                    self.pos=[3200,-400]
+                    #self.pos=[3000,-100]
+                    self.pos=self.game.player.pos
+                    #self.game.player.hp=-10
                     #self.hp =-1
                     #self.set_action('die')
                 if self.collision['down'] :
