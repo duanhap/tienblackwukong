@@ -45,11 +45,11 @@ class PhysicsEntity:
         elif self.type == "nguoisoi":
             self.rectedit=(130,204,40,50)#  x,y,chieudai,chieu cao , 2 giá trị đằng sau này max chỉ đc 50 không là lỗi
             self.rectTuongTacEdit=(75,140,140,110) # khung tuong tac tương tự
-            self.rectAttack=(70,100,100,100,85)
+            self.rectAttack=(15,80,120,130,100)
         elif self.type == "nguoisoido":
             self.rectedit=(130,204,40,50)#  x,y,chieudai,chieu cao , 2 giá trị đằng sau này max chỉ đc 50 không là lỗi
             self.rectTuongTacEdit=(75,140,140,110) # khung tuong tac tương tự
-            self.rectAttack=(70,100,100,100,85)    # khung tấn công thì phải thêm 1 biến 
+            self.rectAttack=(15,80,120,130,100)    # khung tấn công thì phải thêm 1 biến 
         elif self.type == 'npcsoi':
             self.rectedit=(130,189,35,50)
             self.rectTuongTacEdit=(19,50,35,50)

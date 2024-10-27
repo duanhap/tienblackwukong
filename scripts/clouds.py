@@ -1,7 +1,7 @@
 import random
 import pygame
 class Cloud:
-    def __init__(self,pos,img,speed,depth,scale=4.5):
+    def __init__(self,pos,img,speed,depth,scale=1.8):
         self.img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
         self.pos = list(pos)
         self.speed = speed
@@ -14,7 +14,7 @@ class Cloud:
 
 
 class Clouds:
-    def __init__(self,cloud_images,count=16):
+    def __init__(self,cloud_images,count=16,scale=4.5):
         self.clouds = []
 
         for i in range(count):

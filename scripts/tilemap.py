@@ -52,10 +52,15 @@ class Tilemap:
 
     # check solid xem eneymy còn ở trên vùng di đc ko
     def solid_check(self, pos):
-        tile_loc = str(int(pos[0] // self.tile_size)) + ';' + str(int(pos[1] // self.tile_size))
-        if tile_loc in self.tilemap:
-            if self.tilemap[tile_loc]['type'] in PHYSICS_TILES:
-                return self.tilemap[tile_loc]
+        tile_loc = f"{int(pos[0] // self.tile_size)};{int(pos[1] // self.tile_size)}"
+        tile_loc2 = f"{int(pos[0] // self.tile_size)};{int((pos[1] + 50) // self.tile_size)}"
+        
+        for loc in (tile_loc2, tile_loc):
+            if loc in self.tilemap:
+                if self.tilemap[loc]['type'] in PHYSICS_TILES:
+                    return self.tilemap[loc]
+        return None
+
             
              
     #save và load map  và tự động điền map       

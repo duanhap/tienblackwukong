@@ -107,10 +107,20 @@ class Game:
             #new monster
             'nguoisoi/idle': Animation2(get_frames('\\images\\entities\\nguoisoi\\idle',2), img_dur=5,loop=True),
             'nguoisoi/walk': Animation2(get_frames('\\images\\entities\\nguoisoi\\walk',2), img_dur=5,loop=True),
+            'nguoisoi/die': Animation2(get_frames('\\images\\entities\\nguoisoi\\dead',2), img_dur=20,loop=False),
+            'nguoisoi/hurt': Animation2(get_frames('\\images\\entities\\nguoisoi\\hurt',2 ), img_dur=7,loop=False),
+            'nguoisoi/attackgan1': Animation2(get_frames('\\images\\entities\\nguoisoi\\attackgan1',2)+
+                                                get_frames('\\images\\entities\\nguoisoi\\attackgan2',2), img_dur=5,loop=False),
 
 
             'nguoisoido/idle': Animation2(get_frames('\\images\\entities\\nguoisoido\\idle',2), img_dur=5,loop=True),
-            'nguoisoido/run': Animation2(get_frames('\\images\\entities\\nguoisoido\\run',2), img_dur=5,loop=True),
+            'nguoisoido/run': Animation2(get_frames('\\images\\entities\\nguoisoido\\run',2)+
+                                         get_frames('\\images\\entities\\nguoisoido\\jump',2), img_dur=5,loop=True),
+            'nguoisoido/die': Animation2(get_frames('\\images\\entities\\nguoisoido\\dead',2), img_dur=20,loop=False),
+            'nguoisoido/hurt': Animation2(get_frames('\\images\\entities\\nguoisoido\\hurt',2 ), img_dur=7,loop=False),
+            'nguoisoido/attackgan1': Animation2(get_frames('\\images\\entities\\nguoisoido\\attackgan1',2)+
+                                                get_frames('\\images\\entities\\nguoisoido\\attackgan2',2)+
+                                                get_frames('\\images\\entities\\nguoisoido\\attackgan3',2), img_dur=6.9,loop=False),
             
 
             
@@ -174,7 +184,7 @@ class Game:
 
         
         #clouds1
-        self.clouds1 = Clouds(self.assets['clouds'],count = 2)
+        self.clouds1 = Clouds(self.assets['clouds'],count = 2,scale=0.02)
     
         #set level
         self.level = 0
@@ -182,7 +192,7 @@ class Game:
 
 
         #clouds
-        self.clouds = Clouds(self.assets['clouds'],count = 9)
+        self.clouds = Clouds(self.assets['clouds'],count = 7)
 
 
         #soluongphanthan
