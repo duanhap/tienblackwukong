@@ -81,10 +81,33 @@ class NguoiSoi(PhysicsEntity):
                                 self.animation.framecuoi[0]= self.animation.img_duration *14+1
                                 self.animation.framecuoi[1]= self.animation.img_duration *1+1
                                 
-                                #if self.animation.done:
-                                #   self.attacking = False
-                        
-                        if random.randint(0,100)<25  and abs(dis_x)<300:
+                        #cao thì nhảy lên     
+                        if (abs(dis[0])<365 and  abs(dis[1])>100) and abs(dis[1])<400:    
+                            if self.flip:
+                                                                               
+                                if dis[0]<0:
+                                                                
+                                    if dis[1]<0:
+                                        self.velocity[1]=-max(1,min(5,abs(dis[1])/250*5))
+                                        self.velocity[0]=-max(3,dis[0]/200*3)
+                                    else:
+                                        self.velocity[0]=-max(3,dis[0]/200*3)
+                                        self.velocity[1]=-2                              
+                               
+                            else:
+                                                                               
+                                if dis[0]>0:
+                                 
+                                    if dis[1]<0:                                   
+                                        self.velocity[1]=-max(1,min(5,abs(dis[1])/250*5))
+                                        self.velocity[0]=max(3,dis[0]/200*3)  
+                                    else:                                      
+                                        self.velocity[0]=max(3,dis[0]/200*3) 
+                                        self.velocity[1]=-2        
+                                
+                                    
+                            
+                        if random.randint(0,100)<25  and abs(dis_x)<300 and self.air_time==0:
                             if self.flip and dis_x>30:
                                     
                                     self.pos[0]+=random.randint(15,20)
@@ -94,7 +117,7 @@ class NguoiSoi(PhysicsEntity):
                                 self.pos[0]-=random.randint(15,20) 
                                 self.flip = True
                          
-                elif   random.randint(0,100)< 25 :
+                elif   random.randint(0,100)< 100  and self.air_time==0:
                     self.walking = random.randint(30, 120)
                     # người chs đến gần thì dí
                     
@@ -112,17 +135,25 @@ class NguoiSoi(PhysicsEntity):
                     
                 
                 super().update(tilemap, movement=movement)
+                
+                #hãm phanh
+                if self.velocity[0] > 0:
+                    self.velocity[0] = max(self.velocity[0] - 0.1, 0)
+                else:
+                    self.velocity[0] = min(self.velocity[0] + 0.1, 0)
+
 
                 if self.action =='attackgan1':
                             if self.animation.done:
                                 self.attacking = False 
                                 self.can_move= True  
                 if not self.attacking and not self.bidanh:
-                                    
-                                    if movement[0] != 0:
+                                    if self.air_time > 4:
+                                        self.set_action('jump')
+                                    elif movement[0] != 0:
                                         self.set_action('walk')
                                     else:
-                                        self.set_action('idle')
+                                        self.set_action('walk')
                 if self.game.player.attacking:
                             if self.game.player.animation.doneToDoSomething:
                                 if self.recttuongtac().colliderect(self.game.player.rectattack()):

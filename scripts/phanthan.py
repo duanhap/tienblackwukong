@@ -72,7 +72,7 @@ class PhanThan(PhysicsEntity):
                         self.flip = not self.flip
                         
                     else:
-                        movement = (movement[0] - 0.5 if self.flip else 0.5, movement[1])
+                        movement = (movement[0] - 0.8 if self.flip else 0.8, movement[1])
                 else:
                     self.flip = not self.flip
                 self.walking = max(0, self.walking - 1)
@@ -133,7 +133,7 @@ class PhanThan(PhysicsEntity):
                         if self.hp <=0:
                             self.set_action('die')
             if self.action =='attack':
-                if random.randint(0,100)<50:
+                if random.randint(0,100)<2:
                     self.game.sfx['wukongvoicechieudai'].play()
                 if self.animation.done:
                     self.attacking = False 
@@ -149,7 +149,7 @@ class PhanThan(PhysicsEntity):
 
         
             self.timetontai+=1
-            if self.timetontai>2000 or self.game.dead!=0:
+            if self.timetontai>2500 or self.game.dead!=0:
                     if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
                                 self.bidanh =True          
                     if self.hp <=0:

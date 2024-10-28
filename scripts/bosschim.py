@@ -30,14 +30,14 @@ class BossChim(PhysicsEntity):
         self.demthoigiannoi =0
 
 
-       
-      
+        self.posbandau = self.pos
+        
         
         
         
     def update(self, tilemap, movement=(0, 0)):
             #print(self.pos[0],self.pos[1])
-            if not self.dead  :
+            if not self.dead  and (self.game.player.pos[0]>2850 and self.game.player.pos[0]<5490): #[5486, 430][2871, 480] : phạm vi di chuyển
                 #loi noi
                 disloinoi = (self.game.player.pos[0] - self.pos[0], self.game.player.pos[1] - self.pos[1])
        
@@ -49,7 +49,7 @@ class BossChim(PhysicsEntity):
                     else: self.loithoai.render(self.game.screen,(200,0))
                 if self.demthoigiannoi >1200:
                     self.demthoigiannoi =0
-                if random.randint(0,100)<5 and len(self.game.enemies)<9 and self.hp<= 4 and self.mainBoss==True and self.soLanPhanthan>0:
+                if random.randint(0,100)<5  and self.hp<= 4 and self.mainBoss==True and self.soLanPhanthan>0:
                      self.game.enemies.append(BossChim(self.game, self.pos, (75, 100),False))
                      self.game.enemies[len( self.game.enemies)-1].hp = 2
                      self.soLanPhanthan-=1
@@ -58,9 +58,10 @@ class BossChim(PhysicsEntity):
 
 
                 self.air_time+=1
-                if self.air_time>80:
-                    #self.pos=[3000,-100]
-                    self.pos=self.game.player.pos
+                if self.air_time>80 :
+                    self.pos=self.posbandau
+                    #3000,-100
+                    
                     #self.game.player.hp=-10
                     #self.hp =-1
                     #self.set_action('die')
@@ -397,13 +398,18 @@ class BossChim(PhysicsEntity):
                                 
                                     
                                          
-         
-                                            
+            #hãm phanh
+            if self.velocity[0] > 0:
+                self.velocity[0] = max(self.velocity[0] - 0.1, 0)
+            else:
+                self.velocity[0] = min(self.velocity[0] + 0.1, 0)
+                                        
             if self.action == 'hurt':
                 self.game.sfx['bidanh'].play()
                 self.game.screenshake = max(10,self.game.screenshake)
                 if self.game.player.flip == False:
                         if not self.flip:
+                            self.velocity[0]=-10
                             
                             for i in range(30):
                                 angle = random.random() * math.pi * 2
@@ -414,6 +420,7 @@ class BossChim(PhysicsEntity):
                             else:
                                 self.pos[0]+=random.randint(8,15)
                         else:
+                            self.velocity[0]=10
                             for i in range(30):
                                     angle = random.random() * math.pi * 2
                                     speed = random.random() * 13 # độ dài tia
@@ -425,6 +432,7 @@ class BossChim(PhysicsEntity):
                     
                     
                         if not self.flip:
+                            self.velocity[0]=-10
                             
                             for i in range(30):
                                 angle = random.random() * math.pi * 2
@@ -432,6 +440,7 @@ class BossChim(PhysicsEntity):
                                 self.game.particles.append(Particle(self.game, 'particle', self.rect().center, velocity=[math.cos(angle + math.pi) * speed * 0.3, math.sin(angle + math.pi) * speed * 0.3], frame=random.randint(0, 7)))
                             self.pos[0]-=random.randint(3,5)
                         else:
+                            self.velocity[0]=10
                             for i in range(30):
                                     angle = random.random() * math.pi * 2
                                     speed = random.random() * 13 # độ dài tia
@@ -441,6 +450,7 @@ class BossChim(PhysicsEntity):
                                 self.pos[0]-=random.randint(5,28)
                             else:
                                 self.pos[0]-=random.randint(8,15)
+                            
                     
                     
                 if self.attacking:

@@ -41,7 +41,7 @@ class NguoiSoiDo(PhysicsEntity):
                             self.flip = not self.flip
                             
                         else:
-                            movement = (movement[0] - 1.9 if self.flip else 1.9, movement[1])
+                            movement = (movement[0] - 1.7 if self.flip else 1.7, movement[1])
                     else:
                         self.flip = not self.flip
                     self.walking = max(0, self.walking - 1)
@@ -94,7 +94,7 @@ class NguoiSoiDo(PhysicsEntity):
                                 self.pos[0]-=random.randint(15,20) 
                                 self.flip = True
                          
-                elif   random.randint(0,100)< 25 :
+                elif   random.randint(0,100)< 2 :
                     self.walking = random.randint(30, 120)
                     # người chs đến gần thì dí
                     

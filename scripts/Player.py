@@ -31,7 +31,7 @@ class Player(PhysicsEntity):
     def update(self,tilemap,movement=(0,0)):
         super().update(tilemap, movement=movement)
         self.stamina= min(10,self.stamina+0.022)
-
+        
         #va cham với enemy
         for enemycon in self.game.enemies:
             if self.recttuongtac().colliderect(enemycon.rectattack()):

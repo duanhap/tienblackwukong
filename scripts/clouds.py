@@ -1,7 +1,7 @@
 import random
 import pygame
 class Cloud:
-    def __init__(self,pos,img,speed,depth,scale=1.8):
+    def __init__(self,pos,img,speed,depth,scale=1.4):
         self.img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
         self.pos = list(pos)
         self.speed = speed

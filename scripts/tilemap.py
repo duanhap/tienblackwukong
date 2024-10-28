@@ -51,15 +51,26 @@ class Tilemap:
         return matches
 
     # check solid xem eneymy còn ở trên vùng di đc ko
-    def solid_check(self, pos):
-        tile_loc = f"{int(pos[0] // self.tile_size)};{int(pos[1] // self.tile_size)}"
-        tile_loc2 = f"{int(pos[0] // self.tile_size)};{int((pos[1] + 50) // self.tile_size)}"
-        
-        for loc in (tile_loc2, tile_loc):
+    def solid_check(self, pos,type="entity"):
+        if type == "entity":
+
+            tile_loc = f"{int(pos[0] // self.tile_size)};{int(pos[1] // self.tile_size)}"
+            tile_loc2 = f"{int(pos[0] // self.tile_size)};{int((pos[1] + 50) // self.tile_size)}"
+            tile_loc3 = f"{int(pos[0] // self.tile_size)};{int((pos[1] + 100) // self.tile_size)}"
+            
+            for loc in (tile_loc2, tile_loc,tile_loc3):
+                if loc in self.tilemap:
+                    if self.tilemap[loc]['type'] in PHYSICS_TILES:
+                        return self.tilemap[loc]
+            return None
+        else:
+            loc = f"{int(pos[0] // self.tile_size)};{int(pos[1] // self.tile_size)}"
+           
+            
             if loc in self.tilemap:
                 if self.tilemap[loc]['type'] in PHYSICS_TILES:
                     return self.tilemap[loc]
-        return None
+            
 
             
              

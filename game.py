@@ -88,6 +88,8 @@ class Game:
             'bosschim/die': Animation(load_images('entities/bosschim/die',(400,400),(255,255,255)), img_dur=12,loop=False),
             'bosschim/win': Animation(load_images('entities/bosschim/win',(400,400),(255,255,255)), img_dur=31,loop=True),
             'bosschim/tipcan': Animation(load_images('entities/bosschim/tipcan',(400,400),(255,255,255)), img_dur=6,loop=True),
+            'bosschim/jump': Animation(load_images('entities/bosschim/jump',(400,400),(255,255,255)), img_dur=2,loop=False),
+
 
             'player/idle':Animation(load_images('entities/player/idle',(95,125),(255,255,255)),img_dur=15),
             'player/run':Animation(load_images('entities/player/run',(95,125),(255,255,255)),img_dur=10),
@@ -109,6 +111,7 @@ class Game:
             'nguoisoi/walk': Animation2(get_frames('\\images\\entities\\nguoisoi\\walk',2), img_dur=5,loop=True),
             'nguoisoi/die': Animation2(get_frames('\\images\\entities\\nguoisoi\\dead',2), img_dur=20,loop=False),
             'nguoisoi/hurt': Animation2(get_frames('\\images\\entities\\nguoisoi\\hurt',2 ), img_dur=7,loop=False),
+            'nguoisoi/jump': Animation2(get_frames('\\images\\entities\\nguoisoi\\jump',2), img_dur=5.5,loop=False),
             'nguoisoi/attackgan1': Animation2(get_frames('\\images\\entities\\nguoisoi\\attackgan1',2)+
                                                 get_frames('\\images\\entities\\nguoisoi\\attackgan2',2), img_dur=5,loop=False),
 
@@ -487,7 +490,7 @@ class Game:
                 self.screen.blit(img, (projectile[0][0] - img.get_width() / 2 - render_scroll[0], projectile[0][1] - img.get_height() / 2 - render_scroll[1])) # chia chia là lấy center 
 
                 # check xem chạm tile map thì mất 
-                if self.tilemap.solid_check(projectile[0]):
+                if self.tilemap.solid_check(projectile[0],"dan"):
                     self.projectiles.remove(projectile)
                     if  projectile[3] =='kiemnangluong1' or projectile[3] =='kiemnangluong2':
                         if random.randint(0,100)<45:
@@ -705,10 +708,7 @@ class Game:
            
            
 
-            #cloud1
-            self.clouds1.update()
-            self.clouds1.render(self.screen,(render_scroll[0]*3,3*render_scroll[1]))
-             #thanh máu
+            #thanh máu
             if self.level!=0:
                 tang =0
                 if self.fullscreen:
@@ -726,6 +726,10 @@ class Game:
             for npc1 in self.npc.copy():
                 npc1.update(self.tilemap, (0, 0))
                 npc1.render(self.screen, offset=render_scroll)
+            #cloud1
+            self.clouds1.update()
+            self.clouds1.render(self.screen,(render_scroll[0]*3,3*render_scroll[1]))
+           
             #print(self.tilemap.physics_rects_around(self.player.pos))
             for event in pygame.event.get(): #get the input,click , keosv..vv
                 if event.type == pygame.QUIT: #click dau X để thoát
