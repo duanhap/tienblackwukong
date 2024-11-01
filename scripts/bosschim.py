@@ -406,7 +406,7 @@ class BossChim(PhysicsEntity):
                                         
             if self.action == 'hurt':
                 self.game.sfx['bidanh'].play()
-                self.game.screenshake = max(10,self.game.screenshake)
+                self.game.screenshake = max(5,self.game.screenshake)
                 if self.game.player.flip == False:
                         if not self.flip:
                             self.velocity[0]=-10
@@ -458,6 +458,7 @@ class BossChim(PhysicsEntity):
                 self.can_move = False
                 if self.animation.done:
                     self.attacking = True
+                    
                     if self.game.player.flip == False :
                         if not self.flip:
                             self.flip = True
@@ -467,7 +468,7 @@ class BossChim(PhysicsEntity):
 
                             else:
                                     self.set_action('attackgan')
-                                    self.game.screenshake = max(10,self.game.screenshake)
+                                    self.game.screenshake = max(5,self.game.screenshake)
                             
                         else:
                             self.pos[0]+=random.randint(8,10)
@@ -475,7 +476,7 @@ class BossChim(PhysicsEntity):
                                 self.set_action('attackkiemchuanbi')
                             else:
                                     self.set_action('attackgan')
-                                    self.game.screenshake = max(10,self.game.screenshake)
+                                    self.game.screenshake = max(5,self.game.screenshake)
                     else:
                         if  self.flip:
                             self.flip = False
@@ -484,7 +485,7 @@ class BossChim(PhysicsEntity):
                                 self.set_action('attackkiemchuanbi')
                             else:
                                     self.set_action('attackgan')
-                                    self.game.screenshake = max(10,self.game.screenshake)
+                                    self.game.screenshake = max(5,self.game.screenshake)
                             
                         else:
                             self.pos[0]+=random.randint(8,10)
@@ -494,7 +495,7 @@ class BossChim(PhysicsEntity):
                                 if random.randint(0,50)<24:
                                      self.danhxa = True  
                                 self.set_action('attackgan')
-                                self.game.screenshake = max(10,self.game.screenshake)
+                                self.game.screenshake = max(5,self.game.screenshake)
                                     
                                  
                          

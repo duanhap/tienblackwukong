@@ -24,7 +24,8 @@ class PhysicsEntity:
         if self.type =='player':
             self.rectedit=(29,70,35,50)         # (x,y,chiều rộng, chiều cao) của khung
             self.rectTuongTacEdit=(23,50,50,64)     
-            self.rectAttack=(60,-55,130,175,55) #  (cách cạnh rectphai của đối tượng ,y,chiều rộng ,chiều cao,cách cạnh rect trái của đối tượng)  
+            self.rectAttack=(60,-55,130,175,55)
+            #  (cách cạnh rectphai của đối tượng ,y,chiều rộng ,chiều cao,cách cạnh rect trái của đối tượng)  
             # khi flip thì khung attack thay đổi nên cần 5 giá trị để xác định    
         elif self.type =='phanthan':
             self.rectedit=(29,70,35,50)

@@ -2,7 +2,6 @@ import math
 import random
 
 import pygame
-
 from scripts.particle import Particle
 from scripts.spark import Spark
 from scripts.entities import PhysicsEntity
@@ -23,9 +22,7 @@ class NguoiSoi(PhysicsEntity):
         
     def update(self, tilemap, movement=(0, 0)):
         if not self.dead :  # die thì ko đc lam j 
-            
-            # dang đánh mà die thì cút
-            
+            # thanh hp
             
             # trường hợp rơi thì cx die
                 self.air_time+=1
@@ -228,6 +225,18 @@ class NguoiSoi(PhysicsEntity):
         else:
             self.dead = False
             return False       
-   
+    def render(self, surf, offset=(0, 0)):
+        super().render(surf, offset=offset)
+        bar_width = 90
+        bar_height = 5
+        # Tính toán chiều rộng của thanh máu dựa trên HP
+        fill_width = int((self.hp / self.hp_max) * bar_width)
+        disx = self.rect().centerx -self.game.player.rect().centerx
+        disy = self.rect().centery -self.game.player.rect().centery
+        
+
+        if abs(disx) <200 and abs(disy)<200:
+            pygame.draw.rect(surf, (128, 128, 128), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, bar_width, bar_height))
+            pygame.draw.rect(surf, (255,0,0), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, fill_width, bar_height))
         
     

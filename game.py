@@ -3,7 +3,7 @@ import math
 import os
 import random
 import sys
-from scripts.utils import load_image,load_images,Animation
+from scripts.utils import load_image,load_images,Animation,draw_health_bar,draw_bar_hp,toggle_mute
 from scripts.animation2 import get_frame,get_frames,Animation2
 from scripts.Player import Player
 from scripts.cungthu import CungThu
@@ -47,6 +47,8 @@ class Game:
             'stone':load_images('tiles/stone',(50,50),(0,0,0)),
             'stone2':load_images('tiles/grass2',(50,50),(255,255,255)),
             'binhruou':load_image('hp3.png',(112,112),(255,255,255)),
+            'noitaifull':load_image('full.png',(900,800),(255,255,255)),
+            'noitaichuafull':load_image('chuafull.png',(900,800),(255,255,255)),
             'player':load_image('entities/player.png',(95,125),(255,255,255)),
             'background':load_image('background.png',(1200,800)),
             'intro':load_image('intro.png',(1200,800)),
@@ -81,7 +83,7 @@ class Game:
 
             'bosschim/idle': Animation(load_images('entities/bosschim/idle',(400, 400),(255,255,255)), img_dur=10),
             'bosschim/walk': Animation(load_images('entities/bosschim/walk',(400,400),(255,255,255)), img_dur=4),
-            'bosschim/attackkiemchuanbi': Animation(load_images('entities/bosschim/attackiemchuanbi',(400,400),(255,255,255)), img_dur=15,loop=False),
+            'bosschim/attackkiemchuanbi': Animation(load_images('entities/bosschim/attackiemchuanbi',(400,400),(255,255,255)), img_dur=19,loop=False),
             'bosschim/attackkiem': Animation(load_images('entities/bosschim/attackkiem',(400,400),(255,255,255)), img_dur=5,loop=False),
             'bosschim/attackgan': Animation(load_images('entities/bosschim/attackgan',(400,400),(255,255,255)), img_dur=9,loop=False),
             'bosschim/hurt': Animation(load_images('entities/bosschim/hurt',(400,400),(255,255,255)), img_dur=7,loop=False),
@@ -99,8 +101,10 @@ class Game:
             'player/hurt':Animation(load_images('entities/player/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
 
 
-            
-            'player/attack':Animation(load_images('entities/player/attack',(300,300),(255,255,255)),img_dur=5.5,loop=False),
+            'player/attack':Animation(load_images('entities/player/attack2',(610,590),(255,255,255)),img_dur=6.7,loop=False),
+            'player/attack2':Animation(load_images('entities/player/attack1',(610,590),(255,255,255)),img_dur=6.7,loop=False),
+            'player/attack4':Animation(load_images('entities/player/attacknoitai',(610,590),(255,255,255)),img_dur=8.5,loop=False),
+            'player/attack3':Animation(load_images('entities/player/attack',(300,300),(255,255,255)),img_dur=6,loop=False),
             'particle/leaf': Animation(load_images('particles/leaf',(40,40),(0,0,0)), img_dur=30, loop=False),
             'particle/particle': Animation(load_images('particles/particle',(50,50),(0,0,0)), img_dur=12, loop=False),
             'particle/particlewukong': Animation(load_images('particles/particlewukong',(50,50),(0,0,0)), img_dur=12, loop=False),
@@ -179,7 +183,7 @@ class Game:
         self.sfx['bidanh'].set_volume(7)
         self.sfx['chamvukhi'].set_volume(5.1)
         self.sfx['wukongvoicechieudai'].set_volume(1.1)
-
+        self.music = True
         self.clip = VideoFileClip("data/demo.mp4")
         self.show_intro_video()  # Play the intro video
 
@@ -334,39 +338,7 @@ class Game:
 
 
     # Hàm vẽ thanh máu
-    def draw_health_bar(self,screen, x, y, current_hp, max_hp,color=(0,0,0),width=200,height=20):
-        # Kích thước của thanh máu
-        bar_width = width
-        bar_height = height
-        # Tính toán chiều rộng của thanh máu dựa trên HP
-        fill_width = int((current_hp / max_hp) * bar_width)
-
-        # Màu sắc
-        bar_color = color  # Màu đỏ cho thanh máu
-        background_color = (128, 128, 128)  # Màu xám cho viền
-
-        # Vẽ thanh máu nền (màu xám)
-        pygame.draw.rect(screen, background_color, (x, y, bar_width, bar_height))
-        # Vẽ thanh máu thực sự (màu đỏ)
-        pygame.draw.rect(screen, bar_color, (x, y, fill_width, bar_height))
-
-
-    # vẽ  thanh hồi máu bằng bình rượu
-    def draw_bar_hp(self,screen, x, y, current_hp, max_hp,color=(0,0,0),width=200,height=20):
-        # Kích thước của thanh máu
-        bar_width = width
-        bar_height = height
-        # Tính toán chiều rộng của thanh máu dựa trên HP
-        fill_height = int((current_hp / max_hp) * bar_height)
-
-        # Màu sắc
-        bar_color = color  # Màu đỏ cho thanh máu
-        background_color = (128, 128, 128)  # Màu xám cho viền
-
-        # Vẽ thanh máu nền (màu xám)
-        pygame.draw.rect(screen, background_color, (x, y, bar_width, bar_height))
-        # Vẽ thanh máu thực sự (màu đỏ)
-        pygame.draw.rect(screen, bar_color, (x, y+(bar_height-fill_height), bar_height, fill_height))  
+    
 
 
     def add_player(self):
@@ -493,8 +465,8 @@ class Game:
                 if self.tilemap.solid_check(projectile[0],"dan"):
                     self.projectiles.remove(projectile)
                     if  projectile[3] =='kiemnangluong1' or projectile[3] =='kiemnangluong2':
-                        if random.randint(0,100)<45:
-                             self.screenshake = max(40,self.screenshake)
+                        if random.randint(0,100)<35:
+                             self.screenshake = max(20,self.screenshake)
                         for i in range(20):
                             self.sparks.append(Spark(projectile[0], random.random() - 0.5 + (math.pi if projectile[1] > 0 else 0), 5 + random.random()))
                     else:
@@ -569,7 +541,7 @@ class Game:
                             tang = 300
                         else:
                             tang =0
-                        self.draw_health_bar(self.screen,500+tang,  700+tang,enemy.hp, enemy.hp_max,(255,0,0),500,20)
+                        draw_health_bar(self.screen,450+tang,  700+tang,enemy.hp, enemy.hp_max,(255,0,0),500,20)
 
             #phanthan
             for phanthan in self.phanthans.copy():
@@ -584,7 +556,7 @@ class Game:
 
             #la roi
             for rect in self.leaf_spawners:
-                if random.random() * 2500000 < rect.width * rect.height: # NHÂN SỐ CÀNG TO TỶ LỆ RA CẰNG THẤP
+                if random.random() * 6500000 < rect.width * rect.height: # NHÂN SỐ CÀNG TO TỶ LỆ RA CẰNG THẤP
                     pos = (rect.x + random.random() * rect.width, rect.y + random.random() * rect.height)
                     self.particles.append(Particle(self, 'leaf', pos, velocity=[-0.1, 0.3], frame=random.randint(0, 20)))
 
@@ -673,7 +645,32 @@ class Game:
                     self.particles.remove(particle)
           
 
-           #player
+
+            #thanh máu
+            if self.level!=0:
+                tang =0
+                if self.fullscreen:
+                    tang = 300
+                else:
+                    tang =0
+                draw_health_bar(self.screen, 180, 650+tang, self.player.hp, self.player.hp_max,(220, 220, 220))
+                draw_health_bar(self.screen, 180, 675+tang, self.player.mana, self.player.mana_max,(0, 0, 139),40,10)
+                draw_health_bar(self.screen, 180, 695+tang, self.player.stamina, self.player.stamina_max,(255, 255, 0),150,10)
+                draw_bar_hp(self.screen, 52, 600+tang, self.player.binhhp, self.player.binhhpmax,(220, 220, 220),100,100)
+                self.screen.blit(self.assets['binhruou'],(50,595+tang))
+                draw_bar_hp(self.screen, 1090+tang*1.5, 590+tang, self.player.noitai, self.player.noitai_max,(255, 0, 0),10,120,False) 
+                self.screen.blit(self.assets['noitaichuafull'],(600+tang*1.5,20+tang))
+                if self.player.noitai>=10:
+                   self.screen.blit(self.assets['noitaifull'],(600+tang*1.5,20+tang))      
+
+         
+             #npc
+            for npc1 in self.npc.copy():
+                npc1.update(self.tilemap, (0, 0))
+                npc1.render(self.screen, offset=render_scroll)
+
+
+             #player
             if self.player.hp>0 :
                 self.player.update(self.tilemap,(self.movement[1]-self.movement[0],0))
                 self.player.render(self.screen,offset = render_scroll)
@@ -704,28 +701,6 @@ class Game:
                 if self.player.air_time > 300 or  self.player.hp <-500 :
                     self.load_level(self.level)
               
-
-           
-           
-
-            #thanh máu
-            if self.level!=0:
-                tang =0
-                if self.fullscreen:
-                    tang = 300
-                else:
-                    tang =0
-                self.draw_health_bar(self.screen, 180, 650+tang, self.player.hp, self.player.hp_max,(220, 220, 220))
-                self.draw_health_bar(self.screen, 180, 675+tang, self.player.mana, self.player.mana_max,(0, 0, 139),40,10)
-                self.draw_health_bar(self.screen, 180, 695+tang, self.player.stamina, self.player.stamina_max,(255, 255, 0),150,10)
-                self.draw_bar_hp(self.screen, 52, 600+tang, self.player.binhhp, self.player.binhhpmax,(220, 220, 220),100,100)
-                self.screen.blit(self.assets['binhruou'],(50,595+tang))    
-
-         
-             #npc
-            for npc1 in self.npc.copy():
-                npc1.update(self.tilemap, (0, 0))
-                npc1.render(self.screen, offset=render_scroll)
             #cloud1
             self.clouds1.update()
             self.clouds1.render(self.screen,(render_scroll[0]*3,3*render_scroll[1]))
@@ -762,18 +737,20 @@ class Game:
                         
                         
                     if event.key == pygame.K_c:
+                        self.player.tichnoitai=True
                         self.player.attack()
                         
                                
-                    if event.key == pygame.K_x:
-                        
-                        self.player.skillphanthan()
-
-                        
+                    if event.key == pygame.K_x:         
+                        self.player.skillphanthan()   
                     if event.key == pygame.K_z:
                         self.player.dash()
                     if event.key == pygame.K_m:
                         self.enemies.clear()
+                    if event.key == pygame.K_n:
+                        self.music = not self.music
+                        toggle_mute(self.music,self.sfx)
+                       
                     if event.key == pygame.K_v and self.player.binhhp>0:
                         self.player.binhhp-=1
                         self.player.stamina=10
@@ -792,6 +769,10 @@ class Game:
                         #self.phanthan = False
                     if event.key == pygame.K_DOWN:
                         self.player.blocking = False
+                    if event.key == pygame.K_c:
+                        self.player.tichnoitai = False
+                        self.player.dieukiendanhnoitai=0
+                        
             # hiệu ứng chuyển map
             if self.transition:
                 transition_surf = pygame.Surface(self.screen.get_size())

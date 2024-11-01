@@ -16,20 +16,18 @@ class PhanThan(PhysicsEntity):
         self.banchua= False
         self.chuanbixong = True
         self.hp =3
+        self.hp_max =3
         self.dead = False
         self.diquaivat = False
         self.attacking = False
         self.timetontai =0
         self.targets = []  # Danh sách các vị trí mục tiêu, gồm cả nhân vật chính và phân thân
-        
+        self.bilag =0
         
     def update(self, tilemap, movement=(0, 0)):
         
-        if (self.dead or self.hp<=0) and self.action=='die' and self.animation.done:
-             return True
-            
-             
-        elif   not self.dead : # die thì ko đc lam j cả
+       
+        if   not self.dead : # die thì ko đc lam j cả
             
                     
                     
@@ -47,7 +45,7 @@ class PhanThan(PhysicsEntity):
                 dis = (dis_x, dis_y)
                 # Cập nhật hướng di chuyển theo người chơi
             
-                if abs(dis_x) < 900 and  abs(dis_x) >130 and abs(dis_y) <150 and random.randint(0,100)<99:  # Chỉ di chuyển khi khoảng cách phạm vi 400m vì là abs
+                if abs(dis_x) < 900 and  abs(dis_x) >100 and abs(dis_y) <150 :  # Chỉ di chuyển khi khoảng cách phạm vi 400m vì là abs
 
                     speed = max(0.6, abs(dis_x) / 250)
                     movement = (speed if dis_x > 0 else -speed, movement[1]) # di chuyển trái phải  theo ng chs
@@ -63,6 +61,7 @@ class PhanThan(PhysicsEntity):
                     self.diquaivat = False
             except:
                 closest_target=0
+                self.can_move = False  
               
            
             
@@ -92,26 +91,27 @@ class PhanThan(PhysicsEntity):
                         dis = (dis_x, dis_y)
                       
                         #gan thi danh
-                        if (abs(dis[0])<=150 and abs(dis[1]<150)):
-                            if (self.flip and dis[0] < 0):
+                        if (abs(dis[0])<=150 and abs(dis[1]<150)) and not self.attacking:
+                            if (self.flip and dis[0] < 0) :
                                     self.attacking = True
+                                    
                                     self.set_action('attack')
+                                    
                                     self.animation.framecuoi[0]= self.animation.img_duration *5+1
                                     self.animation.framecuoi[1]= self.animation.img_duration *3+1
                                     
-                                    if self.animation.done:
-                                        self.attacking = False
+                                    
                                         
                                 
 
                             if (not self.flip and dis[0] > 0):
                                 self.attacking = True
-                                self.set_action('attack')
+                                
+                                self.set_action('attack')                              
                                 self.animation.framecuoi[0]= self.animation.img_duration *5+1
                                 self.animation.framecuoi[1]= self.animation.img_duration *3+1
                                 
-                                if self.animation.done:
-                                    self.attacking = False
+                                
                     
                     except:
                          self.can_move = False           
@@ -127,18 +127,25 @@ class PhanThan(PhysicsEntity):
             for enemy in self.game.enemies:
                 if self.recttuongtac().colliderect(enemy.rectattack()):
                     if enemy.attacking  and enemy.animation.doneToDoSomething:
-                        if not self.bidanh and not self.dead: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
+                        if not self.bidanh : # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
                             self.bidanh =True
                             self.set_action('hurt')
                         if self.hp <=0:
                             self.set_action('die')
             if self.action =='attack':
+                
                 if random.randint(0,100)<2:
                     self.game.sfx['wukongvoicechieudai'].play()
                 if self.animation.done:
                     self.attacking = False 
-                    self.can_move= True  
-            
+                    self.can_move= True 
+                    # NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW cách ko bị đơ
+                     
+                    self.bidanh = False
+               
+                     
+                     
+                    
             # dung va chay
             if not self.attacking and not self.bidanh:
                 
@@ -151,7 +158,7 @@ class PhanThan(PhysicsEntity):
             self.timetontai+=1
             if self.timetontai>2500 or self.game.dead!=0:
                     if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
-                                self.bidanh =True          
+                            self.bidanh =True          
                     if self.hp <=0:
                             self.set_action('die')
                     else:
@@ -195,11 +202,11 @@ class PhanThan(PhysicsEntity):
             
             if self.flip == False:
                 self.pos[0] +=5.5
-                self.pos[1] -=15
+                self.pos[1] -=random.randint(5,13)
                 
             else:
                 self.pos[0] -=5.5 
-                self.pos[1] -=15
+                self.pos[1] -=random.randint(5,13)
 
             if self.attacking:
                self.attacking = False
@@ -236,4 +243,12 @@ class PhanThan(PhysicsEntity):
         else:
             self.anim_offset=(0,0)
             super().render(surf, offset=offset)
-    
+        super().render(surf, offset=offset)
+        bar_width = 90
+        bar_height = 5
+        # Tính toán chiều rộng của thanh máu dựa trên HP
+        fill_width = int((self.hp / self.hp_max) * bar_width)
+       
+        #pygame.draw.rect(surf, (128, 128, 128), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, bar_width, bar_height))
+        #pygame.draw.rect(surf, (255,0,0), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, fill_width, bar_height))
+

@@ -34,6 +34,8 @@ class NguoiSoiDo(PhysicsEntity):
                     self.set_action('die')
                 if self.collision['down'] :
                     self.air_time =0
+
+                    
                 dis_main9 = self.game.player.rect().centerx - self.rect().centerx
                 if self.walking:# xử lý đi trên vùng ok , chạm trái phải thì lật
                     if tilemap.solid_check((self.rect().centerx + (-20 if self.flip else 20), self.rect().centery+25)):
@@ -196,7 +198,21 @@ class NguoiSoiDo(PhysicsEntity):
                     return True    
         else:
             self.dead = False
-            return False       
+            return False  
+    def render(self, surf, offset=(0, 0)):
+        super().render(surf, offset=offset)
+        bar_width = 90
+        bar_height = 5
+        # Tính toán chiều rộng của thanh máu dựa trên HP
+        fill_width = int((self.hp / self.hp_max) * bar_width)
+        disx = self.rect().centerx -self.game.player.rect().centerx
+        disy = self.rect().centery -self.game.player.rect().centery
+        
+
+        if abs(disx) <200 and abs(disy)<200:
+            pygame.draw.rect(surf, (128, 128, 128), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, bar_width, bar_height))
+            pygame.draw.rect(surf, (255,0,0), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, fill_width, bar_height))
+                
    
         
     

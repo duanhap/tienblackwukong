@@ -24,14 +24,27 @@ class Player(PhysicsEntity):
         self.hp_max =10
         self.hp=10
         self.mana=50
-        self.stamina = 50
+        
         self.binhhpmax=3
         self.binhhp=3
+        self.noitai =0
+        self.noitai_max=10
+        self.attack_thu_may=1
+
+        self.tichnoitai=False
+        self.dieukiendanhnoitai=0
 
     def update(self,tilemap,movement=(0,0)):
         super().update(tilemap, movement=movement)
-        self.stamina= min(10,self.stamina+0.022)
-        
+        self.stamina= min(10,self.stamina+0.032)
+
+        #diu kien danh noi tai
+        if self.tichnoitai:
+            self.dieukiendanhnoitai+=10
+        if self.noitai>=10 and self.dieukiendanhnoitai>120:
+
+            self.attack_thu_may=4
+            
         #va cham với enemy
         for enemycon in self.game.enemies:
             if self.recttuongtac().colliderect(enemycon.rectattack()):
@@ -56,7 +69,7 @@ class Player(PhysicsEntity):
                             self.stamina-=0.01*random.randint(5,20)
 
                         if enemycon.type =='bosschim':
-                            self.game.screenshake = max(random.randint(25,40),self.game.screenshake)
+                            self.game.screenshake = max(random.randint(10,15),self.game.screenshake)
                             if random.randint(0,100)<40:
                                 dis_x = enemycon.rectattack().centerx - self.recttuongtac().centerx
                                 #dis_y = enemycon.rectattack().centery - self.recttuongtac().centery
@@ -70,22 +83,65 @@ class Player(PhysicsEntity):
                                     self.pos[0] -= random.randint(10,150)  # Giảm tốc độ dịch chuyển
                                     self.pos[1] -= random.randint(20, 100)  # Giảm độ ngẫu nhiên trục y
                         else:
-                            self.game.screenshake = max(16,self.game.screenshake)
+                            self.game.screenshake = max(8,self.game.screenshake)
                     
         if self.attacking:
-            self.set_action('attack')
-            self.game.sfx['wukongvoicechieudai'].play()
-            self.animation.framecuoi[0]= self.animation.img_duration *5+1
-            self.animation.framecuoi[1]= self.animation.img_duration *3+1
-            self.anim_offset=(-90,-75)
+            
+            if self.attack_thu_may==1:
+                self.set_action('attack')
+                self.game.sfx['wukongvoicechieudai'].play()
+                self.animation.framecuoi[0]= self.animation.img_duration *5+1
+                self.animation.framecuoi[1]= self.animation.img_duration *3+1
+                self.anim_offset=(-260,-388)
+                self.rectTuongTacEdit=(23,50,50,64)     
+                self.rectAttack=(60,50,130,80,55)
+                
+            elif self.attack_thu_may==2:
+                self.set_action('attack2')
+                self.game.sfx['wukongvoicechieudai'].play()
+                self.animation.framecuoi[0]= self.animation.img_duration *5+1
+                self.animation.framecuoi[1]= self.animation.img_duration *3+1
+                self.anim_offset=(-260,-388)
+                self.rectTuongTacEdit=(23,50,50,64)     
+                self.rectAttack=(60,50,130,80,55)
+            elif self.attack_thu_may==3:
+                self.set_action('attack3')
+                self.game.sfx['wukongvoicechieudai'].play()
+                self.animation.framecuoi[0]= self.animation.img_duration *5+1
+                self.animation.framecuoi[1]= self.animation.img_duration *3+1        
+                self.anim_offset=(-90,-75)
+                self.rectTuongTacEdit=(23,50,50,64)     
+                self.rectAttack=(60,-55,130,175,55)
+            elif self.attack_thu_may==4:
+                self.set_action('attack4')
+                
+                self.rectTuongTacEdit=(23,-200  ,50,64)
+                self.rectAttack=(10,-350,330,470,240)
+                self.noitai=0
+                
+                self.animation.framecuoi[0]= self.animation.img_duration *7+1
+                self.animation.framecuoi[1]= self.animation.img_duration *3+1
+                self.anim_offset=(-240,-400)
+                if self.animation.frame>105 and self.animation.frame<125:
+                    self.game.screenshake = max(20,self.game.screenshake)           
             self.can_move = False
-            if self.animation.done:
-             self.anim_offset=(0,0)
-             
-             self.can_move = True
-             self.attacking = False
+            if self.action=='attack4':
+                if self.tichnoitai and self.animation.frame>40:
+                    self.animation.ngatchieu = True
+                    
 
-        
+                else:
+                    self.animation.ngatchieu = False
+
+            if self.animation.done:
+                self.rectTuongTacEdit=(23,50,50,64)
+                self.attack_thu_may=max(1,(self.attack_thu_may+1)%4)
+                self.anim_offset=(0,0)
+                if self.noitai>7:
+                    self.noitai=10
+                self.noitai+=3             
+                self.can_move = True
+                self.attacking = False
 
         if self.attacking==False:
 
@@ -113,7 +169,7 @@ class Player(PhysicsEntity):
                 self.set_action('run')
             else:
                 self.set_action('idle')
-
+        
         if self.action=='phanthanskill':
             if self.animation.done:
                 self.game.add_player()
@@ -180,6 +236,9 @@ class Player(PhysicsEntity):
        if not self.attacking and   not self.blocking and self.stamina>1:  # Chỉ bắt đầu tấn công nếu không đang tấn công
             self.attacking = True
             self.stamina-=1
+            if self.attack_thu_may==4:
+                self.stamina-=4
+        
             
     def dash(self):
         if  abs(self.dashing)==0 and not self.attacking and  not self.blocking and self.stamina>3.5:
