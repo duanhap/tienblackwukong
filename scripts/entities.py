@@ -180,9 +180,9 @@ class PhysicsEntity:
 
     # lấy ảnh
     def render(self,surf,offset=(0,0)):# off set đẻ nhận vật luôn ở vị trí trung tâm camera
-        pygame.draw.rect(surf, (0, 0, 255), self.rectattack(offset), 2)  # Viền đỏ
-        pygame.draw.rect(surf, (0, 255, 0), self.recttuongtac(offset), 2)  # Viền xanh lá
-        pygame.draw.rect(surf, (255, 0, 0), self.rect(offset), 2)  # Viền đỏ
+        #pygame.draw.rect(surf, (0, 0, 255), self.rectattack(offset), 2)  # Viền đỏ
+        #pygame.draw.rect(surf, (0, 255, 0), self.recttuongtac(offset), 2)  # Viền xanh lá
+        #pygame.draw.rect(surf, (255, 0, 0), self.rect(offset), 2)  # Viền đỏ
         surf.blit(pygame.transform.flip(self.animation.img(),self.flip,False),(self.pos[0]-offset[0]+self.anim_offset[0],self.pos[1]-offset[1]+self.anim_offset[1]))
                                              
 

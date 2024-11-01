@@ -33,6 +33,7 @@ class Player(PhysicsEntity):
 
         self.tichnoitai=False
         self.dieukiendanhnoitai=0
+        
 
     def update(self,tilemap,movement=(0,0)):
         super().update(tilemap, movement=movement)
@@ -126,14 +127,17 @@ class Player(PhysicsEntity):
                     self.game.screenshake = max(20,self.game.screenshake)           
             self.can_move = False
             if self.action=='attack4':
-                if self.tichnoitai and self.animation.frame>40:
+                
+                if self.tichnoitai and self.animation.frame>40 and self.animation.frame<45 :
                     self.animation.ngatchieu = True
+                    self.kickhoatdung=0
                     
 
                 else:
                     self.animation.ngatchieu = False
 
             if self.animation.done:
+                
                 self.rectTuongTacEdit=(23,50,50,64)
                 self.attack_thu_may=max(1,(self.attack_thu_may+1)%4)
                 self.anim_offset=(0,0)
