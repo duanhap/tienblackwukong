@@ -36,8 +36,9 @@ class CungThu(PhysicsEntity):
             # trường hợp rơi thì cx die
                 self.air_time+=1
                 if self.air_time>150:
-                    self.hp =-1
-                    self.set_action('die')
+                    #self.hp =-1
+                    #self.set_action('die')
+                    return True
                 if self.collision['down'] :
                     self.air_time =0
                 if self.walking:# xử lý đi trên vùng ok , chạm trái phải thì lật

@@ -22,15 +22,19 @@ class PhanThan(PhysicsEntity):
         self.attacking = False
         self.timetontai =0
         self.targets = []  # Danh sách các vị trí mục tiêu, gồm cả nhân vật chính và phân thân
-        self.bilag =0
+        self.air_time =0
         
     def update(self, tilemap, movement=(0, 0)):
         
        
         if   not self.dead : # die thì ko đc lam j cả
             
-                    
-                    
+            self.air_time+=1
+            
+            if self.collision['down'] :
+                self.air_time =0
+
+
             # Tính toán khoảng cách đến người chơi
             # Cập nhật danh sách các vị trí mục tiêu
             self.targets = [clone.rect() for clone in self.game.enemies]
@@ -42,10 +46,15 @@ class PhanThan(PhysicsEntity):
                 dis_x = closest_target.centerx - self.rect().centerx
                 dis_y = closest_target.centery - self.rect().centery
 
-                dis = (dis_x, dis_y)
+                
                 # Cập nhật hướng di chuyển theo người chơi
             
-                if abs(dis_x) < 900 and  abs(dis_x) >100 and abs(dis_y) <150 :  # Chỉ di chuyển khi khoảng cách phạm vi 400m vì là abs
+                
+            except:
+                dis_x = self.game.player.rect().centerx - self.rect().centerx
+                dis_y = self.game.player.rect().centery - self.rect().centery
+            dis = (dis_x, dis_y)
+            if abs(dis_x) < 900 and  abs(dis_x) >100 and abs(dis_y) <150 :  # Chỉ di chuyển khi khoảng cách phạm vi 400m vì là abs
 
                     speed = max(0.6, abs(dis_x) / 250)
                     movement = (speed if dis_x > 0 else -speed, movement[1]) # di chuyển trái phải  theo ng chs
@@ -56,15 +65,11 @@ class PhanThan(PhysicsEntity):
                     self.diquaivat = True
                 #if abs(dis_y) > 100:
                 # movement = (movement[0], -0.01)
-                else:
+                
+            else:
                     
-                    self.diquaivat = False
-            except:
-                closest_target=0
-                self.can_move = False  
-              
-           
-            
+                 self.diquaivat = False
+                           
             if self.walking:# xử lý đi trên vùng ok , chạm trái phải thì lật
                 if tilemap.solid_check((self.rect().centerx + (-20 if self.flip else 20), self.rect().centery+25)):
                     if (self.collision['right'] or self.collision['left']):
@@ -88,37 +93,54 @@ class PhanThan(PhysicsEntity):
                         dis_x =  closest_target.centerx - self.rect().centerx
                         dis_y =  closest_target.centery - self.rect().centery
 
-                        dis = (dis_x, dis_y)
+                        
+                    
+                    except:
+                        dis_x = self.game.player.rect().centerx - self.rect().centerx
+                        dis_y = self.game.player.rect().centery - self.rect().centery          
+                    dis = (dis_x, dis_y)
                       
                         #gan thi danh
-                        if (abs(dis[0])<=150 and abs(dis[1]<150)) and not self.attacking:
-                            if (self.flip and dis[0] < 0) :
-                                    self.attacking = True
-                                    
-                                    self.set_action('attack')
-                                    
-                                    self.animation.framecuoi[0]= self.animation.img_duration *5+1
-                                    self.animation.framecuoi[1]= self.animation.img_duration *3+1
-                                    
-                                    
-                                        
-                                
-
-                            if (not self.flip and dis[0] > 0):
+                    if (abs(dis[0])<=150 and abs(dis[1]<150)) and not self.attacking:
+                        if (self.flip and dis[0] < 0) :
                                 self.attacking = True
                                 
-                                self.set_action('attack')                              
+                                self.set_action('attack')
+                                
                                 self.animation.framecuoi[0]= self.animation.img_duration *5+1
                                 self.animation.framecuoi[1]= self.animation.img_duration *3+1
                                 
                                 
-                    
-                    except:
-                         self.can_move = False           
-                    
+                        if (not self.flip and dis[0] > 0):
+                            self.attacking = True
+                            
+                            self.set_action('attack')                              
+                            self.animation.framecuoi[0]= self.animation.img_duration *5+1
+                            self.animation.framecuoi[1]= self.animation.img_duration *3+1
+                    #cao thì nhảy lên     
+                    if (abs(dis[0])<365 and  abs(dis[1])>100) and abs(dis[1])<500:    
+                        if self.flip:
+                                                                            
+                            if dis[0]<0:
+                                                            
+                                if dis[1]<0:
+                                    self.velocity[1]=-max(1,min(5,abs(dis[1])/250*5))
+                                    self.velocity[0]=-max(3,dis[0]/200*3)
+                                else:
+                                    self.velocity[0]=-max(3,dis[0]/200*3)
+                                    self.velocity[1]=-2                              
+                            
+                        else:
+                                                                            
+                            if dis[0]>0:
                                 
-
-
+                                if dis[1]<0:                                   
+                                    self.velocity[1]=-max(1,min(5,abs(dis[1])/250*5))
+                                    self.velocity[0]=max(3,dis[0]/200*3)  
+                                else:                                      
+                                    self.velocity[0]=max(3,dis[0]/200*3) 
+                                    self.velocity[1]=-2               
+                
             elif random.random() < 0.01:
                 self.walking = random.randint(30, 120)
             
@@ -149,14 +171,16 @@ class PhanThan(PhysicsEntity):
             # dung va chay
             if not self.attacking and not self.bidanh:
                 
-                if movement[0] != 0:
+                if self.air_time > 4:
+                    self.set_action('jump')
+                elif movement[0] != 0:
                     self.set_action('run')
                 else:
                     self.set_action('idle')
 
         
             self.timetontai+=1
-            if self.timetontai>2500 or self.game.dead!=0:
+            if self.timetontai>3000 or self.game.dead!=0:
                     if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
                             self.bidanh =True          
                     if self.hp <=0:
@@ -197,7 +221,13 @@ class PhanThan(PhysicsEntity):
                             self.set_action('die')
                     else:
                             self.set_action('hurt')
-                         
+        #hãm phanh
+        if self.velocity[0] > 0:
+            self.velocity[0] = max(self.velocity[0] - 0.1, 0)
+        else:
+            self.velocity[0] = min(self.velocity[0] + 0.1, 0)       
+
+
         if self.action == 'hurt' :
             
             if self.flip == False:

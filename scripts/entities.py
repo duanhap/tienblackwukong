@@ -54,7 +54,13 @@ class PhysicsEntity:
         elif self.type == 'npcsoi':
             self.rectedit=(130,189,35,50)
             self.rectTuongTacEdit=(19,50,35,50)
-            self.rectAttack=(43,45,50,75,40) 
+            self.rectAttack=(43,45,50,75,40)
+        elif self.type == 'bossnguoida':
+            #self.rectedit=(130,189,35,50)
+            self.rectedit=(550,595,35,50)
+            self.rectTuongTacEdit=(460,160,150,400)
+            #self.rectAttack=(380,250,100,400,100)
+            self.rectAttack=(0,550,500,100,500)   
              
 
         self.collision = {'up':False,'down':False,'right':False,'left':False}

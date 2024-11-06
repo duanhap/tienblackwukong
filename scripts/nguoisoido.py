@@ -30,8 +30,7 @@ class NguoiSoiDo(PhysicsEntity):
             # trường hợp rơi thì cx die
                 self.air_time+=1
                 if self.air_time>150:
-                    self.hp =-1
-                    self.set_action('die')
+                    return True
                 if self.collision['down'] :
                     self.air_time =0
 
@@ -114,11 +113,23 @@ class NguoiSoiDo(PhysicsEntity):
                     
                 
                 super().update(tilemap, movement=movement)
+                #hãm phanh
+                if self.velocity[0] > 0:
+                    self.velocity[0] = max(self.velocity[0] - 0.1, 0)
+                else:
+                    self.velocity[0] = min(self.velocity[0] + 0.1, 0)
+
 
                 if self.action =='attackgan1':
+                            self.bidanh= False
+                            
                             if self.animation.done:
                                 self.attacking = False 
-                                self.can_move= True  
+                                self.can_move= True
+                                if self.flip and self.animation.doneToDoSomething:
+                                    self.velocity[0]=-1.5
+                                else:
+                                    self.velocity[0]=1.5  
                 if not self.attacking and not self.bidanh:
                                     
                                     if movement[0] != 0:

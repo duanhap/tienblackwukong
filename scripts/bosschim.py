@@ -16,8 +16,8 @@ class BossChim(PhysicsEntity):
         self.dan='nangluong'
         self.banchua= False
         self.chuanbixong = True
-        self.hp =20
-        self.hp_max = 20
+        self.hp =30
+        self.hp_max = 30
         self.dead = False
         self.diplayer = False #dí player
         self.danhxa = False
@@ -49,7 +49,7 @@ class BossChim(PhysicsEntity):
                     else: self.loithoai.render(self.game.screen,(200,0))
                 if self.demthoigiannoi >1200:
                     self.demthoigiannoi =0
-                if random.randint(0,100)<5  and self.hp<= 4 and self.mainBoss==True and self.soLanPhanthan>0:
+                if random.randint(0,100)<5  and self.hp<= 13 and self.mainBoss==True and self.soLanPhanthan>0:
                      self.game.enemies.append(BossChim(self.game, self.pos, (75, 100),False))
                      self.game.enemies[len( self.game.enemies)-1].hp = 2
                      self.soLanPhanthan-=1

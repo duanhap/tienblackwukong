@@ -9,7 +9,7 @@ from scripts.entities import PhysicsEntity
 class Player(PhysicsEntity):
     def __init__(self,game,pos,size):
         super().__init__(game,'player',pos,size)
-        self.air_time =0# thời gian ở trong không trung không tiếp đất
+        self.air_time =0  # thời gian ở trong không trung không tiếp đất
         self.jumps =1
         self.dashing = 0
         self.phanthaning= False
@@ -38,6 +38,7 @@ class Player(PhysicsEntity):
     def update(self,tilemap,movement=(0,0)):
         super().update(tilemap, movement=movement)
         self.stamina= min(10,self.stamina+0.032)
+        
 
         #diu kien danh noi tai
         if self.tichnoitai:
@@ -51,13 +52,14 @@ class Player(PhysicsEntity):
             if self.recttuongtac().colliderect(enemycon.rectattack()):
                 if enemycon.attacking and abs(self.dashing) <50 and enemycon.animation.doneToDoSomething :
                     if  not self.blocking:                      
-                        self.game.sfx['boom'].play()              
-                        if self.flip == False:
-                            self.pos[0] +=5.5
-                            self.pos[1] -=15                           
-                        else:
-                            self.pos[0] -=5.5 
-                            self.pos[1] -=15                    
+                        self.game.sfx['boom'].play() 
+                        if random.randint(0,100)<15:             
+                            if self.flip == False:
+                                self.pos[0] +=5.5
+                                self.pos[1] -=10                           
+                            else:
+                                self.pos[0] -=5.5 
+                                self.pos[1] -=10                    
                         self.hp-=0.1
                         #self.game.sfx['bidanh'].play()
                         
@@ -87,7 +89,7 @@ class Player(PhysicsEntity):
                             self.game.screenshake = max(8,self.game.screenshake)
                     
         if self.attacking:
-            
+                   
             if self.attack_thu_may==1:
                 self.set_action('attack')
                 self.game.sfx['wukongvoicechieudai'].play()
@@ -96,6 +98,10 @@ class Player(PhysicsEntity):
                 self.anim_offset=(-260,-388)
                 self.rectTuongTacEdit=(23,50,50,64)     
                 self.rectAttack=(60,50,130,80,55)
+                if self.flip and self.animation.doneToDoSomething:
+                            self.velocity[0]=-1.5
+                else:
+                            self.velocity[0]=1.5   
                 
             elif self.attack_thu_may==2:
                 self.set_action('attack2')
@@ -105,6 +111,10 @@ class Player(PhysicsEntity):
                 self.anim_offset=(-260,-388)
                 self.rectTuongTacEdit=(23,50,50,64)     
                 self.rectAttack=(60,50,130,80,55)
+                if self.flip and self.animation.doneToDoSomething:
+                            self.velocity[0]=-1.5
+                else:
+                            self.velocity[0]=1.5   
             elif self.attack_thu_may==3:
                 self.set_action('attack3')
                 self.game.sfx['wukongvoicechieudai'].play()
@@ -137,6 +147,7 @@ class Player(PhysicsEntity):
                     self.animation.ngatchieu = False
 
             if self.animation.done:
+                
                 
                 self.rectTuongTacEdit=(23,50,50,64)
                 self.attack_thu_may=max(1,(self.attack_thu_may+1)%4)

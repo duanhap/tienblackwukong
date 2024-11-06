@@ -27,8 +27,7 @@ class NguoiSoi(PhysicsEntity):
             # trường hợp rơi thì cx die
                 self.air_time+=1
                 if self.air_time>150:
-                    self.hp =-1
-                    self.set_action('die')
+                    return True
                 if self.collision['down'] :
                     self.air_time =0
                 dis_main9 = self.game.player.rect().centerx - self.rect().centerx
@@ -141,9 +140,15 @@ class NguoiSoi(PhysicsEntity):
 
 
                 if self.action =='attackgan1':
+                            self.bidanh= False
                             if self.animation.done:
                                 self.attacking = False 
-                                self.can_move= True  
+                                self.can_move= True
+                                if self.flip and self.animation.doneToDoSomething:
+                                    self.velocity[0]=-1.5
+                                else:
+                                    self.velocity[0]=1.5 
+                               
                 if not self.attacking and not self.bidanh:
                                     if self.air_time > 4:
                                         self.set_action('jump')

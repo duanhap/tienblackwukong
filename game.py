@@ -10,6 +10,7 @@ from scripts.cungthu import CungThu
 from scripts.bosschim import BossChim
 from scripts.nguoisoi import NguoiSoi
 from scripts.nguoisoido import NguoiSoiDo
+from scripts.bossnguoida import BossNguoiDa
 from scripts.npcsoi import NpcSoi
 from scripts.Enemy import Enemy
 from scripts.tilemap import Tilemap
@@ -47,6 +48,7 @@ class Game:
             'stone':load_images('tiles/stone',(50,50),(0,0,0)),
             'stone2':load_images('tiles/grass2',(50,50),(255,255,255)),
             'binhruou':load_image('hp3.png',(112,112),(255,255,255)),
+            'amount':load_image('amount.png',(112,112),(255,255,255)),
             'noitaifull':load_image('full.png',(900,800),(255,255,255)),
             'noitaichuafull':load_image('chuafull.png',(900,800),(255,255,255)),
             'player':load_image('entities/player.png',(95,125),(255,255,255)),
@@ -101,8 +103,8 @@ class Game:
             'player/hurt':Animation(load_images('entities/player/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
 
 
-            'player/attack':Animation(load_images('entities/player/attack2',(610,590),(255,255,255)),img_dur=6.7,loop=False),
-            'player/attack2':Animation(load_images('entities/player/attack1',(610,590),(255,255,255)),img_dur=6.7,loop=False),
+            'player/attack':Animation(load_images('entities/player/attack2',(610,590),(255,255,255)),img_dur=6,loop=False),
+            'player/attack2':Animation(load_images('entities/player/attack1',(610,590),(255,255,255)),img_dur=6,loop=False),
             'player/attack4':Animation(load_images('entities/player/attacknoitai',(610,590),(255,255,255)),img_dur=8.5,loop=False),
             'player/attack3':Animation(load_images('entities/player/attack',(300,300),(255,255,255)),img_dur=6,loop=False),
             'particle/leaf': Animation(load_images('particles/leaf',(40,40),(0,0,0)), img_dur=30, loop=False),
@@ -114,7 +116,7 @@ class Game:
             'nguoisoi/idle': Animation2(get_frames('\\images\\entities\\nguoisoi\\idle',2), img_dur=5,loop=True),
             'nguoisoi/walk': Animation2(get_frames('\\images\\entities\\nguoisoi\\walk',2), img_dur=5,loop=True),
             'nguoisoi/die': Animation2(get_frames('\\images\\entities\\nguoisoi\\dead',2), img_dur=20,loop=False),
-            'nguoisoi/hurt': Animation2(get_frames('\\images\\entities\\nguoisoi\\hurt',2 ), img_dur=7,loop=False),
+            'nguoisoi/hurt': Animation2(get_frames('\\images\\entities\\nguoisoi\\hurt',2 ), img_dur=10,loop=False),
             'nguoisoi/jump': Animation2(get_frames('\\images\\entities\\nguoisoi\\jump',2), img_dur=5.5,loop=False),
             'nguoisoi/attackgan1': Animation2(get_frames('\\images\\entities\\nguoisoi\\attackgan1',2)+
                                                 get_frames('\\images\\entities\\nguoisoi\\attackgan2',2), img_dur=5,loop=False),
@@ -124,13 +126,23 @@ class Game:
             'nguoisoido/run': Animation2(get_frames('\\images\\entities\\nguoisoido\\run',2)+
                                          get_frames('\\images\\entities\\nguoisoido\\jump',2), img_dur=5,loop=True),
             'nguoisoido/die': Animation2(get_frames('\\images\\entities\\nguoisoido\\dead',2), img_dur=20,loop=False),
-            'nguoisoido/hurt': Animation2(get_frames('\\images\\entities\\nguoisoido\\hurt',2 ), img_dur=7,loop=False),
+            'nguoisoido/hurt': Animation2(get_frames('\\images\\entities\\nguoisoido\\hurt',2 ), img_dur=10,loop=False),
             'nguoisoido/attackgan1': Animation2(get_frames('\\images\\entities\\nguoisoido\\attackgan1',2)+
                                                 get_frames('\\images\\entities\\nguoisoido\\attackgan2',2)+
                                                 get_frames('\\images\\entities\\nguoisoido\\attackgan3',2), img_dur=6.9,loop=False),
             
 
             
+            'bossnguoida/idle': Animation(load_images('entities/bossnguoida/idle',(1100,800),(255,255,255)),img_dur=10,loop=True),
+            'bossnguoida/attackchocxa': Animation(load_images('entities/bossnguoida/attack',(1100,800),(255,255,255)),img_dur=6,loop=False),
+            'bossnguoida/attackgan': Animation(load_images('entities/bossnguoida/attackgan',(1100,800),(255,255,255)),img_dur=7,loop=False),
+            'bossnguoida/block': Animation(load_images('entities/bossnguoida/block',(1100,800),(255,255,255)),img_dur=8,loop=False),
+            'bossnguoida/die': Animation(load_images('entities/bossnguoida/die',(1100,800),(255,255,255)),img_dur=6,loop=False),
+            'bossnguoida/hurt': Animation(load_images('entities/bossnguoida/idle',(1100,800),(255,255,255)),img_dur=4,loop=False),
+            'bossnguoida/xuathien': Animation(load_images('entities/bossnguoida/xuathien',(1100,800),(255,255,255)),img_dur=10,loop=False),
+
+
+
             #npc
             'npcsoi/idle': Animation2(get_frames('\\images\\entities\\npcsoi\\idle',0.3), img_dur=8,loop=True),
             'loithoainpc':Animation(load_images('entities/loithoai',(1200,400),(255,255,255)),img_dur=400,loop=True),
@@ -310,7 +322,7 @@ class Game:
         self.npc=[]
         for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1),('spawners', 2),
                                              ('spawners', 3),('spawners', 4),('spawners', 5),
-                                             ('spawners', 6)]):
+                                             ('spawners', 6),('spawners', 7)]):
             if spawner['variant'] == 0:
                 self.player.pos = spawner['pos']
                 self.player.air_time =0
@@ -326,6 +338,8 @@ class Game:
                 self.enemies.append(NguoiSoiDo(self, spawner['pos'], (75, 100)))
             if spawner['variant'] == 6:
                 self.npc.append(NpcSoi(self, spawner['pos'], (75, 100)))
+            if spawner['variant'] == 7:
+                self.enemies.append(BossNguoiDa(self, spawner['pos'], (75, 100)))
             
         self.projectiles = [] #đạn bắn
         self.particles = []
@@ -519,7 +533,18 @@ class Game:
                 kill = spark.update()
                 spark.render(self.screen, offset=render_scroll)
                 if kill:
-                    self.sparks.remove(spark)              
+                    self.sparks.remove(spark)  
+
+
+            #hien sô lượng anime
+            if self.level!=0:
+                font = pygame.font.Font(None, 50)
+                text_surface = font.render(str(len(self.enemies)), True, (0,0,0))
+                text_surfaceX = font.render("X", True, (0,0,0))
+                self.screen.blit(text_surface, (900, 50))
+                self.screen.blit(text_surfaceX, (950, 50))
+                self.screen.blit(self.assets['amount'],(960,20))  
+                        
             #ênmy
             for enemy in self.enemies.copy():
                 kill = enemy.update(self.tilemap, (0, 0))
@@ -537,6 +562,14 @@ class Game:
                 else:
                     if enemy.type=='bosschim'and self.player.pos[0]>2800 and self.player.pos[0]<5300  and enemy.mainBoss==True:
                         tang =0
+                        if self.fullscreen:
+                            tang = 300
+                        else:
+                            tang =0
+                        draw_health_bar(self.screen,450+tang,  700+tang,enemy.hp, enemy.hp_max,(255,0,0),500,20)
+                    if enemy.type=="bossnguoida" and self.player.pos[0]<-2400 and self.player.pos[0]>-4800:
+                        tang =0
+                        
                         if self.fullscreen:
                             tang = 300
                         else:
@@ -683,6 +716,8 @@ class Game:
                     self.particles.append(Particle(self, 'particlewukong', (self.player.rect().centerx+4,self.player.rect().centery-6.5), velocity=[math.cos(angle + math.pi) * speed * 0.5, math.sin(angle + math.pi) * speed * 0.5], frame=random.randint(0, 7)))
                     
             #CO CHE LOAD MAP
+                
+
             if not len(self.enemies):
                 self.transition+=1
                 if self.transition >30:
@@ -690,8 +725,6 @@ class Game:
                     self.load_level(self.level)
             if self.transition<0:
                 self.transition+=1
-
-            
 
             if self.player.air_time>130 or self.player.hp<=0:
                 self.player.hp -=1
@@ -737,6 +770,7 @@ class Game:
                         
                         
                     if event.key == pygame.K_c:
+                        
                         self.player.tichnoitai=True
                         self.player.attack()
                         
