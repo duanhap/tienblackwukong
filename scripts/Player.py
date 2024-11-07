@@ -126,7 +126,7 @@ class Player(PhysicsEntity):
             elif self.attack_thu_may==4:
                 self.set_action('attack4')
                 
-                self.rectTuongTacEdit=(23,-200  ,50,64)
+                self.rectTuongTacEdit=(23,-230,50,64)
                 self.rectAttack=(10,-350,330,470,240)
                 self.noitai=0
                 

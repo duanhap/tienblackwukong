@@ -134,12 +134,17 @@ class Game:
 
             
             'bossnguoida/idle': Animation(load_images('entities/bossnguoida/idle',(1100,800),(255,255,255)),img_dur=10,loop=True),
-            'bossnguoida/attackchocxa': Animation(load_images('entities/bossnguoida/attack',(1100,800),(255,255,255)),img_dur=6,loop=False),
-            'bossnguoida/attackgan': Animation(load_images('entities/bossnguoida/attackgan',(1100,800),(255,255,255)),img_dur=7,loop=False),
+            'bossnguoida/attackchocxa': Animation(load_images('entities/bossnguoida/attack',(1100,800),(255,255,255)),img_dur=7,loop=False),
+            'bossnguoida/attackgan': Animation(load_images('entities/bossnguoida/attackgan',(1100,800),(255,255,255)),img_dur=6,loop=False),
             'bossnguoida/block': Animation(load_images('entities/bossnguoida/block',(1100,800),(255,255,255)),img_dur=8,loop=False),
             'bossnguoida/die': Animation(load_images('entities/bossnguoida/die',(1100,800),(255,255,255)),img_dur=6,loop=False),
             'bossnguoida/hurt': Animation(load_images('entities/bossnguoida/idle',(1100,800),(255,255,255)),img_dur=4,loop=False),
             'bossnguoida/xuathien': Animation(load_images('entities/bossnguoida/xuathien',(1100,800),(255,255,255)),img_dur=10,loop=False),
+            'bossnguoida/banlazecao': Animation(load_images('entities/bossnguoida/banlazecao',(1100,800),(255,255,255))+
+                                                load_images('entities/bossnguoida/banlazecao',(1100,800),(255,255,255))+
+                                                load_images('entities/bossnguoida/banlazecao',(1100,800),(255,255,255)),img_dur=5,loop=False),
+            'bossnguoida/banlazethap': Animation(load_images('entities/bossnguoida/banlazethap',(2000,800),(255,255,255)),img_dur=6.6,loop=False),
+
 
 
 
@@ -153,13 +158,13 @@ class Game:
 
 
 
-            'phanthan/idle':Animation(load_images('entities/player/idle',(95,125),(255,255,255)),img_dur=15),
-            'phanthan/run':Animation(load_images('entities/player/run',(95,125),(255,255,255)),img_dur=10),
+            'phanthan/idle':Animation(load_images('entities/trubatgioi',(110,125),(255,255,255)),img_dur=15),
+            'phanthan/run':Animation(load_images('entities/trubatgioi',(110,125),(255,255,255)),img_dur=10),
             'phanthan/jump':Animation(load_images('entities/player/jump',(95,125),(255,255,255))),
             'phanthan/hurt':Animation(load_images('entities/player/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
 
             #'player/slide':Animation(load_images('entities/player/slide',(95,125),(255,255,255))),
-            'phanthan/attack':Animation(load_images('entities/player/attack',(300,300),(255,255,255)),img_dur=6,loop=False),
+            'phanthan/attack':Animation(load_images('entities/player/attack',(300,300),(255,255,255)),img_dur=5,loop=False),
             'phanthan/die':Animation(load_images('entities/player/die',(200,200),(0,0,0)),img_dur=10,loop=False),
 
 

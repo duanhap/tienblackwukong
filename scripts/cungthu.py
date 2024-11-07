@@ -269,7 +269,11 @@ class CungThu(PhysicsEntity):
                                     else:
                                         
                                         self.set_action('hurt')               
-                    
+                if self.bidanh:                        
+                        if self.collision['right']:     
+                            self.pos[0]-=10
+                        elif  self.collision['left']  :                           
+                            self.pos[0]+=10    
                      
         if self.action == 'hurt' :
             

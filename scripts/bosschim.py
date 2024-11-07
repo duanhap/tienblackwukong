@@ -348,7 +348,11 @@ class BossChim(PhysicsEntity):
                             
                             self.pos[0]-=random.randint(15,20) 
                             self.flip = True 
-                          
+                if self.bidanh:                        
+                        if self.collision['right']:     
+                            self.pos[0]-=15
+                        elif  self.collision['left']  :                           
+                            self.pos[0]+=15         
                 # khiu khích chiến thắng
             if self.game.player.hp <=0:
                 self.can_move = False

@@ -2,7 +2,7 @@ import math
 import random
 
 import pygame
-
+from scripts.tilemap import Tilemap
 from scripts.particle import Particle
 from scripts.spark import Spark
 from scripts.entities import PhysicsEntity
@@ -23,15 +23,23 @@ class BossNguoiDa(PhysicsEntity):
         self.blocking = False
 
         self.landaugap= True
+
+
+
+        self.chieudaikhungatack=100
+        self.vitridaukhungattacknotflip=530
         
     def update(self, tilemap, movement=(0, 0)):
         disx1 = self.rect().centerx -self.game.player.rect().centerx
-        disy1 = self.rect().centery -self.game.player.rect().centery
-        
+        disy1 = self.rect().centery -self.game.player.recttuongtac().centery
+        # check chạm tường thì bị nảy lại
+                      
+                        
         
         if not self.chuanbixong:
             self.set_action('xuathien')
             super().update(tilemap, movement=movement)
+            
             
             if abs(disx1) >10 and self.landaugap:
                 self.animation.ngatchieu = True
@@ -75,7 +83,7 @@ class BossNguoiDa(PhysicsEntity):
                             
 
                             # Cập nhật danh sách các vị trí mục tiêu
-                            self.targets = [self.game.player.rect()] + [clone.rect() for clone in self.game.phanthans]
+                            self.targets = [self.game.player.recttuongtac()] + [clone.recttuongtac() for clone in self.game.phanthans]
                             
                             # Tìm mục tiêu gần nhất
                             closest_target = min(self.targets, key=lambda t: math.hypot(t.centerx - self.rect().centerx, t.centery - self.rect().centery))
@@ -93,26 +101,50 @@ class BossNguoiDa(PhysicsEntity):
                                     self.blocking = True                                    
                                     self.set_action('block')
                             
-                            elif (abs(dis[0])<300 and abs(dis[0])>=50 and abs(dis[1])<1200):
-                                if (self.flip and dis[0] < 0):
-                                        self.attacking = True
-                                        self.set_action('attackgan')
+                            elif (abs(dis[0])<400 and abs(dis[0])>=50 ):
+                                if abs(dis[1])<100:
+                                    if self.hp>10:
+                                        if (self.flip and dis[0] < 0):
+                                                self.attacking = True
+                                                self.set_action('attackgan')
+                                                
+                                            
+                                        if (not self.flip and dis[0] > 0):
+                                            self.attacking = True
+                                            self.set_action('attackgan')
+                                   
+                                elif abs(dis[1])<1500:
+                                    if (self.flip and dis[0] < 0):
+                                            self.attacking = True
+                                            self.set_action('banlazecao')
+                                            
                                         
+                                    if (not self.flip and dis[0] > 0):
+                                        self.attacking = True
+                                        self.set_action('banlazecao')
                                     
-                                if (not self.flip and dis[0] > 0):
-                                    self.attacking = True
-                                    self.set_action('attackgan')
-                                    
-                                 
-                            elif (abs(dis[0])<=600 and abs(dis[0])>=250 and abs(dis[1])<1200):
-                                if (self.flip and dis[0] < 0):
+                                
+                            elif (abs(dis[0])<=1000 and abs(dis[0])>=50 and abs(dis[1])<1200):
+                                if self.hp>200:
+                                     
+                                    if (self.flip and dis[0] < 0):
+                                            self.attacking = True
+                                            self.set_action('attackchocxa')
+                                            
+                                        
+                                    if (not self.flip and dis[0] > 0):
                                         self.attacking = True
                                         self.set_action('attackchocxa')
+                                else:
+                                    if (self.flip and dis[0] < 0):
+                                            self.attacking = True
+                                            self.set_action('banlazethap')
+                                            
                                         
-                                    
-                                if (not self.flip and dis[0] > 0):
-                                    self.attacking = True
-                                    self.set_action('attackchocxa')
+                                    if (not self.flip and dis[0] > 0):
+                                        self.attacking = True
+                                        self.set_action('banlazethap')
+                                     
                                     
                             
                                  
@@ -156,14 +188,9 @@ class BossNguoiDa(PhysicsEntity):
                         
                         if self.game.player.flip == False:
                             self.pos[0] +=random.randint(1,3)
-                            
-                                
+                                                         
                         else:
-                            self.pos[0] -=random.randint(1,3)
-                            
-                        
-                        
-                        
+                            self.pos[0] -=random.randint(1,3)            
                         if self.animation.done:
                             self.bidanh = False
                             self.blocking = False 
@@ -172,19 +199,31 @@ class BossNguoiDa(PhysicsEntity):
                                 if self.flip:
                                     self.flip = False
                                     self.attacking = True
-                                    self.set_action('attackgan')
+                                    if abs(disy1)<100:
+                                        self.set_action('attackgan')
+                                    else:
+                                        self.set_action('banlazecao')
                                 else:
                                     self.attacking = True
-                                    self.set_action('attackgan')
+                                    if abs(disy1)<100:
+                                        self.set_action('attackgan')
+                                    elif abs(disx1)<250:
+                                        self.set_action('banlazecao')
 
                             else:
                                 if self.flip:
                                     self.attacking = True
-                                    self.set_action('attackgan')
+                                    if abs(disy1)<100:
+                                        self.set_action('attackgan')
+                                    elif abs(disx1)<250:
+                                        self.set_action('banlazecao')
                                 else:
                                     self.flip = False
                                     self.attacking = True
-                                    self.set_action('attackgan')
+                                    if abs(disy1)<100:
+                                        self.set_action('attackgan')
+                                    elif abs(disx1)<250:
+                                        self.set_action('banlazecao')
 
                             
                               
@@ -193,18 +232,82 @@ class BossNguoiDa(PhysicsEntity):
                                 self.animation.framecuoi[0]= self.animation.img_duration *14+1
                                 self.animation.framecuoi[1]= self.animation.img_duration *3+1
                                 self.rectAttack=(380,250,100,400,100)
-                                
+
+
                                 self.bidanh= False
                                 self.blocking = False
                                 
                                 if self.animation.done:
                                     self.attacking = False 
                                     self.can_move= True
-                                    
+                    if self.action =='banlazethap':
+                                self.animation.framecuoi[0]= self.animation.img_duration *22+1
+                                self.animation.framecuoi[1]= self.animation.img_duration *21.86+1
+                                
+                                self.rectAttack=(self.vitridaukhungattacknotflip,550,self.chieudaikhungatack,100,830) 
+                                #800
+                                #-170
+                                
+                                if self.chieudaikhungatack<=130:
+                                    self.chieudaikhungatack +=0.5
+                                    if not self.flip:
+                                        self.vitridaukhungattacknotflip-=0.5
+                                    else:
+                                        self.vitridaukhungattacknotflip=-170
+                                elif self.chieudaikhungatack<=800:
+                                    self.chieudaikhungatack +=15
+                                    if not self.flip:
+                                        self.vitridaukhungattacknotflip-=15
+                                    else:
+                                        self.vitridaukhungattacknotflip=-170
+
+                                self.bidanh= False
+                                self.blocking = False
+                                
+                                if self.animation.done:
+                                    self.attacking = False 
+                                    self.can_move= True
+                                    self.chieudaikhungatack=100
+                                    self.vitridaukhungattacknotflip=530
+                    if self.action =='banlazecao':
+                                """
+                                keys_to_remove = []
+
+                                # Lặp qua các phần tử trong tilemap
+                                for rect in tilemap.physics_rects_around([self.rectattack().centerx,self.rectattack().centery],1):
+                                
+                                    if self.rectattack().colliderect(rect):
+                                        tile_loc = f"{int(rect.x // 50)};{int(rect.y // 50)}"
+                                        keys_to_remove.append(tile_loc)
+                                        print(tile_loc)  # Thêm key vào danh sách cần xóa
+
+                                # Xóa các phần tử đã chọn khỏi tilemap
+                                for loc in keys_to_remove:
+                                    tilemap.remove(loc)
+                                """                   
+                                if self.flip == False:        
+                                    self.pos[0] -=random.randint(-4,4)              
+                                else:
+                                    self.pos[0] +=random.randint(-4,4)
+                                self.animation.framecuoi[0]= self.animation.img_duration *48+1
+                                self.animation.framecuoi[1]= self.animation.img_duration *3+1
+                                self.rectAttack=(0,210,450,80,450) 
+                                self.bidanh= False
+                                self.blocking = False
+                                
+                                if self.animation.done:
+                                    self.attacking = False 
+                                    self.can_move= True
+                                    if self.flip and self.animation.doneToDoSomething:
+                                        self.velocity[0]=-1.5
+                                    else:
+                                        self.velocity[0]=1.5
+                                                    
                     if self.action =='attackgan':
                                 self.animation.framecuoi[0]= self.animation.img_duration *7.5+1
                                 self.animation.framecuoi[1]= self.animation.img_duration *3+1
-                                self.rectAttack=(0,550,500,100,500) 
+                                self.rectAttack=(0,550,500,100,500)
+                                 
                                 self.bidanh= False
                                 self.blocking = False
                                 
@@ -237,8 +340,10 @@ class BossNguoiDa(PhysicsEntity):
                                                         self.hp-=0.05
                                                     else:
                                                         self.hp-=0.02
-                                                    self.set_action('hurt')
-                                                     
+                                                    if self.action !='banlazethap':
+                                                        self.set_action('hurt')
+                                                    else:
+                                                        self.bidanh= True
                     for phanthan in self.game.phanthans:
                         if phanthan.animation.doneToDoSomething:
                                 if self.recttuongtac().colliderect(phanthan.rectattack()):
@@ -249,8 +354,22 @@ class BossNguoiDa(PhysicsEntity):
                                                     self.set_action('die')
                                                 else:
                                                     self.hp-=0.02
-                                                    self.set_action('hurt')
-                                                         
+                                                    if self.action !='banlazethap':
+                                                        self.set_action('hurt')
+                                                    else:
+                                                        self.bidanh= True
+                    if self.bidanh or self.attacking or self.blocking:                        
+                        if self.collision['right']:     
+                            self.pos[0]-=20
+                        elif  self.collision['left']  :                           
+                            self.pos[0]+=20               
+                           
+                
+
+                    
+                   
+
+                                                     
         if self.action =='xuathien':
             self.flip = True
             if self.animation.done:
@@ -258,37 +377,69 @@ class BossNguoiDa(PhysicsEntity):
                 self.chuanbixong = True
         if self.action == 'hurt' :
             self.bidanh = True
-            if self.game.player.flip == False:
+            if self.game.player.flip == False:        
                 self.pos[0] +=random.randint(1,5)
                 
+                     
+                
             else:
-                self.pos[0] -=random.randint(1,3)
+                self.pos[0] -=random.randint(1,5)
+                
 
             if self.attacking:
                self.attacking = False
             self.can_move = False
             if self.animation.done:
-                
-                if self.game.player.flip:
-                    if self.flip:
-                        self.flip = False
-                        self.attacking = True
-                        self.set_action('attackgan')
-                    else:
-                        self.attacking = True
-                        self.set_action('attackgan')
-
+                if random.randint(0,10)<2 and self.hp>10:
+                    self.blocking = True
+                    self.set_action('block')
                 else:
-                    if self.flip:
-                        self.attacking = True
-                        self.set_action('attackgan')
-                    else:
-                        self.flip = False
-                        self.attacking = True
-                        self.set_action('attackgan')
+                    if self.game.player.flip:
+                        if self.flip:
+                            self.flip = False
+                            self.attacking = True
+                            if abs(disy1)<100:
+                                
+                                if self.hp<10:
+                                    self.set_action('banlazethap')
+                                else:
+                                    self.set_action('attackgan')   
+                            elif abs(disx1)<250:
+                                self.set_action('banlazecao')
+                        else:
+                            self.attacking = True
+                            if abs(disy1)<100:
+                                if self.hp<10:
+                                    self.set_action('banlazethap')
+                                else:
+                                    self.set_action('attackgan')
+                            elif abs(disx1)<250:
+                                self.set_action('banlazecao')
 
-                self.bidanh = False
-                self.can_move = True
+                    else:
+                        if self.flip:
+                            self.attacking = True
+                            if abs(disy1)<100:
+                                if self.hp<10:
+                                    self.set_action('banlazethap')
+                                else:
+                                    self.set_action('attackgan')
+                            elif abs(disx1)<250:
+                                self.set_action('banlazecao')
+                        else:
+                            self.flip = False
+                            self.attacking = True
+                            if abs(disy1)<100:
+                                if self.hp<10:
+                                    self.set_action('banlazethap')
+                                else:
+                                    
+                                    self.set_action('attackgan')
+                            elif abs(disx1)<250:
+                                self.set_action('banlazecao')
+
+                    self.bidanh = False
+                    self.can_move = True
                 
         if self.action =='die':
                 if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
@@ -311,7 +462,7 @@ class BossNguoiDa(PhysicsEntity):
         else:
             self.dead = False
             return False
-
+        
 
         
     def render(self, surf, offset=(0, 0)):
@@ -325,6 +476,9 @@ class BossNguoiDa(PhysicsEntity):
         if self.action == 'xuathien':
             
             self.anim_offset=(145,-20)
+        if self.action == 'banlazethap':
+            
+            self.anim_offset=(-480,0)
             
           
         super().render(surf, offset=offset)

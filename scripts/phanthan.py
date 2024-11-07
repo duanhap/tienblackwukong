@@ -221,6 +221,11 @@ class PhanThan(PhysicsEntity):
                             self.set_action('die')
                     else:
                             self.set_action('hurt')
+            if self.bidanh:                        
+                        if self.collision['right']:     
+                            self.pos[0]-=10
+                        elif  self.collision['left']  :                           
+                            self.pos[0]+=10 
         #hãm phanh
         if self.velocity[0] > 0:
             self.velocity[0] = max(self.velocity[0] - 0.1, 0)

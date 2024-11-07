@@ -116,9 +116,7 @@ class PhysicsEntity:
         #di chuyen len
         self.pos[1]+=self.frame_movement[1]*5
 
-        #xử lý trạm 
-        entity_rect = self.rect()
-        pos_rect = [entity_rect.x,entity_rect.y]
+
         
        # Xử lý va chạm trục X
         #xử lý trạm 
@@ -136,8 +134,22 @@ class PhysicsEntity:
                     self.collision['left'] = True
                     self.pos[0] =  entity_rect.x - self.rectedit[0]
                 # Cập nhật lại vị trí theo trục X
-                
-                
+
+
+
+        #check va chạm tường       
+        for rect in tilemap.physics_rects_around(pos_rect,1):
+            if entity_rect.colliderect(rect)  :
+                kcp = abs(entity_rect.centerx- rect.right)
+                kct = abs(entity_rect.centerx- rect.left)
+                if kct<kcp and entity_rect.right >= rect.left  :
+                    
+                    self.collision['right'] = True
+                    
+                if kct>kcp and entity_rect.left <= rect.right :
+                    
+                    self.collision['left'] = True
+                 
 
        
 
