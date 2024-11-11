@@ -11,6 +11,7 @@ from scripts.bosschim import BossChim
 from scripts.nguoisoi import NguoiSoi
 from scripts.nguoisoido import NguoiSoiDo
 from scripts.bossnguoida import BossNguoiDa
+from scripts.bossanhliems import BossAnhLiems
 from scripts.npcsoi import NpcSoi
 from scripts.Enemy import Enemy
 from scripts.tilemap import Tilemap
@@ -56,10 +57,18 @@ class Game:
             'intro':load_image('intro.png',(1200,800)),
             'introword':load_image('introword3.png',(1200,800),(0,0,0)),
             'tree':load_images('tiles/tree',None,(255,255,255),5),
-            'clouds':load_images('clouds',None,(0,0,0)),
+            'clouds':load_images('clouds/man1',None,(0,0,0)),
+            'clouds2':load_images('clouds/man2',None,(0,0,0)),
             'stonegrass':load_images('tiles/stonegrass',None,(0,0,0),2),
             'ice':load_images('tiles/ice',None,(0,0,0),2),
             'background3':load_image('background3.png',(1200,800)),
+            
+             #dan lam
+            'background2':load_image('background2.png',(1200,800)),
+            'groundforest':load_images('tiles/groundforest',(50,50),(0,0,0)),
+            'caydamlay':load_images('tiles/caydamlay',None,(255,255,255),2),
+            
+
 
 
 
@@ -148,6 +157,28 @@ class Game:
 
 
 
+            #nhi lang than
+            'nhilangthan/idle':Animation(load_images('entities/nhilangthan/idle',(172,198),(255,255,255)),img_dur=15),
+            'nhilangthan/hurt':Animation(load_images('entities/nhilangthan/hurt',(172,198),(255,255,255)),img_dur=5,loop=False),
+            'nhilangthan/walk':Animation(load_images('entities/nhilangthan/walk',(172,198),(255,255,255)),img_dur=8),
+            'nhilangthan/die':Animation(load_images('entities/nhilangthan/die',(1800,1300),(255,255,255)),img_dur=15,loop = False),
+            'nhilangthan/phikiem':Animation(load_images('entities/nhilangthan/phikiem',(1080,360),(255,255,255)),img_dur=8,loop = False),
+            'nhilangthan/tialazemax':Animation(load_images('entities/nhilangthan/tialazeoeoeoe',(1800,1300),(255,255,255)),img_dur=6.5,loop = False),
+            'nhilangthan/nemriu':Animation(load_images('entities/nhilangthan/xenuisavemom',(1800,1300),(255,255,255)),img_dur=6.5,loop = False),
+            'riuthan/idle':Animation(load_images('entities/nhilangthan/riu',(800,500),(255,255,255)),img_dur=6.5,loop = False),
+            'nhilangthan/luot':Animation(load_images('entities/nhilangthan/luot',(1080,360),(255,255,255)),img_dur=6,loop = False),
+            'nhilangthan/chuanbilao':Animation(load_images('entities/nhilangthan/chuanbilao',(1080,360),(255,255,255)),img_dur=6,loop = False),
+            'nhilangthan/laodenattack':Animation(load_images('entities/nhilangthan/laodenattack',(1080,360),(255,255,255)),img_dur=6,loop = False),
+            'nhilangthan/laodenattack2':Animation(load_images('entities/nhilangthan/laodenatack2',(1080,360),(255,255,255)),img_dur=6,loop = False),
+            'nhilangthan/xoay':Animation(load_images('entities/nhilangthan/attackxoay',(410,390),(255,255,255)),img_dur=8,loop = False),
+            'nhilangthan/combogan':Animation(load_images('entities/nhilangthan/attackcombongan',(420,390),(255,255,255)),img_dur=7,loop = False),
+            'nhilangthan/tialazegan':Animation(load_images('entities/nhilangthan/tialazegan',(1080,360),(255,255,255)),img_dur=4,loop = False),
+
+
+
+
+ 
+
             #npc
             'npcsoi/idle': Animation2(get_frames('\\images\\entities\\npcsoi\\idle',0.3), img_dur=8,loop=True),
             'loithoainpc':Animation(load_images('entities/loithoai',(1200,400),(255,255,255)),img_dur=400,loop=True),
@@ -175,8 +206,11 @@ class Game:
             'projectile': load_image('projectile.png',(20,15),(0,0,0)),
             'cungten1': load_image('cungten1.png',(80,6),(0,0,0)),
             'cungten2': load_image('cungten2.png',(80,6),(255,255,255)),
+            'kiem1': load_image('kiem1.png',(100,20),(255,255,255)),
+            'kiem2': load_image('kiem2.png',(100,20),(255,255,255)),
             'kiemnangluong1': load_image('kimnl1.png',(100,180),(0,0,0)),
             'kiemnangluong2': load_image('kimnl2.png',(100,180),(0,0,0)),
+
             
             #'intro':Animation(load_images('tiles/batdau',(1200,800)),img_dur=10,loop=False)
             
@@ -194,7 +228,7 @@ class Game:
             'boom':pygame.mixer.Sound('data/sfx/boom.mp3')
         }
         self.sfx['chuyencanh'].set_volume(0.01)
-        self.sfx['boom'].set_volume(0.01)
+        self.sfx['boom'].set_volume(0.01) 
         self.sfx['tocbien'].set_volume(0.5)
         self.sfx['tocbienquai'].set_volume(5.1)
         self.sfx['bidanh'].set_volume(7)
@@ -208,15 +242,15 @@ class Game:
 
         
         #clouds1
-        self.clouds1 = Clouds(self.assets['clouds'],count = 2,scale=0.02)
-    
+        self.clouds1 = Clouds(self.assets['clouds'],count = 2,scale=1.2)
+        self.clouds2 = Clouds(self.assets['clouds2'],count=6,scale =4.5)
         #set level
         self.level = 0
         self.load_level(self.level)
 
 
         #clouds
-        self.clouds = Clouds(self.assets['clouds'],count = 7)
+        self.clouds = Clouds(self.assets['clouds'],count = 7,scale=1.2)
 
 
         #soluongphanthan
@@ -311,7 +345,7 @@ class Game:
        
         self.tilemap = Tilemap(self,tile_size=50)
       
-
+        
         self.tilemap.load(str(map_id) + '.json')
         # hịu ứng lá rơi  nhờ extract map để bik vị trí spawwn
         self.leaf_spawners = []
@@ -327,7 +361,7 @@ class Game:
         self.npc=[]
         for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1),('spawners', 2),
                                              ('spawners', 3),('spawners', 4),('spawners', 5),
-                                             ('spawners', 6),('spawners', 7)]):
+                                             ('spawners', 6),('spawners', 7),('spawners',8)]):
             if spawner['variant'] == 0:
                 self.player.pos = spawner['pos']
                 self.player.air_time =0
@@ -345,6 +379,8 @@ class Game:
                 self.npc.append(NpcSoi(self, spawner['pos'], (75, 100)))
             if spawner['variant'] == 7:
                 self.enemies.append(BossNguoiDa(self, spawner['pos'], (75, 100)))
+            if spawner['variant'] == 8:
+                self.enemies.append(BossAnhLiems(self, spawner['pos'], (75, 100)))
             
         self.projectiles = [] #đạn bắn
         self.particles = []
@@ -379,6 +415,7 @@ class Game:
 
     
     def run(self):
+       
         current_music = None
        
         while True:
@@ -413,7 +450,7 @@ class Game:
            
             #camera theo player
             self.scroll[0]+=(self.player.rect().centerx-self.screen.get_width()/2-self.scroll[0])/50
-            self.scroll[1]+=(self.player.rect().centery-self.screen.get_height()/2-self.scroll[1])/3
+            self.scroll[1]+=(self.player.rect().centery-90-self.screen.get_height()/2-self.scroll[1])/3
             render_scroll =(int(self.scroll[0]),int(self.scroll[1]))
 
         
@@ -434,16 +471,16 @@ class Game:
                     self.assets['background'] =load_image('background.png',(info.current_w,info.current_h))
                 else:
                     self.assets['background'] =load_image('background.png',(1200,800))
-            
+                
                 self.screen.blit(self.assets['background'],(0,0))
             elif self.level ==2:
                 if self.fullscreen:
                     info = pygame.display.Info()
-                    self.assets['background'] =load_image('background.png',(info.current_w,info.current_h))
+                    self.assets['background22'] =load_image('background22.png',(info.current_w,info.current_h))
                 else:
-                    self.assets['background'] =load_image('background.png',(1200,800))
+                    self.assets['background22'] =load_image('background22.png',(1200,800))
             
-                self.screen.blit(self.assets['background'],(0,0))
+                self.screen.blit(self.assets['background2'],(0,0))
             
             elif self.level ==3:
                 if self.fullscreen:
@@ -451,7 +488,7 @@ class Game:
                     self.assets['background3'] =load_image('background3.png',(info.current_w,info.current_h))
                 else:
                     self.assets['background3'] =load_image('background3.png',(1200,800))
-            
+                
                 self.screen.blit(self.assets['background3'],(0,0))
 
 
@@ -460,8 +497,13 @@ class Game:
 
             
             #cloud
-            self.clouds.update()
-            self.clouds.render(self.screen,offset = render_scroll)
+            if self.level !=2:
+                self.clouds.update()
+                self.clouds.render(self.screen,offset = render_scroll)
+            else:
+                self.clouds2.update()
+                self.clouds2.render(self.screen,offset = render_scroll)
+
 
             if self.level ==0  and self.fullscreen:
                 info = pygame.display.Info()
@@ -740,8 +782,12 @@ class Game:
                     self.load_level(self.level)
               
             #cloud1
-            self.clouds1.update()
-            self.clouds1.render(self.screen,(render_scroll[0]*3,3*render_scroll[1]))
+            if self.level !=2:
+                self.clouds1.update()
+                self.clouds1.render(self.screen,(render_scroll[0]*3,3*render_scroll[1]))
+         
+
+
            
             #print(self.tilemap.physics_rects_around(self.player.pos))
             for event in pygame.event.get(): #get the input,click , keosv..vv

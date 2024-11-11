@@ -30,8 +30,9 @@ class NpcSoi(PhysicsEntity):
             #if not self.walking:
         dis = (self.game.player.pos[0] - self.pos[0], self.game.player.pos[1] - self.pos[1])
        
+       
 
-        if abs(dis[0])<100:
+        if abs(dis[0])<100 and abs(dis[1])<300:
             
             self.loithoai.update()
             self.loithoai.render(self.game.screen,(0,400))

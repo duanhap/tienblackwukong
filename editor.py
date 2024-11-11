@@ -28,6 +28,10 @@ class Editor:
             'ice':load_images('tiles/ice',None,(0,0,0),2),
             'spawners': load_images('tiles/spawners',(50,50),(0,0,0)),
             'tree':load_images('tiles/tree',None,(255,255,255),5),
+
+            #dan lm
+            'groundforest':load_images('tiles/groundforest',(50,50),(0,0,0)),
+            'caydamlay':load_images('tiles/caydamlay',None,(255,255,255),2),
             
            
         }
@@ -39,7 +43,7 @@ class Editor:
         
         #hien map nào
         try:
-           self.tilemap.load('1.json')
+           self.tilemap.load('0.json')
         except FileNotFoundError:
             pass
             
@@ -161,7 +165,7 @@ class Editor:
                     if event.key == pygame.K_t:
                         self.tilemap.autotile()
                     if event.key == pygame.K_o:
-                        self.tilemap.save('1.json')
+                        self.tilemap.save('0.json')
                     if event.key == pygame.K_LSHIFT:
                         self.shift = True
                 if event.type == pygame.KEYUP:

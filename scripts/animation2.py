@@ -6,7 +6,7 @@ def get_frame(sheet, frame, width, height, scale):
     image = pygame.Surface((width, height)).convert_alpha()
     image.blit(sheet, (0, 0), ((width * frame), 0, width, height))
     image = pygame.transform.scale(image, (width * scale, height * scale))
-    image.set_colorkey((255, 255, 255))
+    image.set_colorkey((0, 0, 0))
 
     return image    
 def get_frames(path,scale):

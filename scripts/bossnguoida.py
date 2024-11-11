@@ -229,8 +229,8 @@ class BossNguoiDa(PhysicsEntity):
                               
                        
                     if self.action =='attackchocxa':
-                                self.animation.framecuoi[0]= self.animation.img_duration *14+1
-                                self.animation.framecuoi[1]= self.animation.img_duration *3+1
+                                self.animation.framecuoi[0]= self.animation.img_duration *58+1
+                                
                                 self.rectAttack=(380,250,100,400,100)
 
 
@@ -247,7 +247,7 @@ class BossNguoiDa(PhysicsEntity):
                                 self.rectAttack=(self.vitridaukhungattacknotflip,550,self.chieudaikhungatack,100,830) 
                                 #800
                                 #-170
-                                
+                                # can attack
                                 if self.chieudaikhungatack<=130:
                                     self.chieudaikhungatack +=0.5
                                     if not self.flip:

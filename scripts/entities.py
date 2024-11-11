@@ -60,7 +60,15 @@ class PhysicsEntity:
             self.rectedit=(550,595,35,50)
             self.rectTuongTacEdit=(460,160,150,400)
             #self.rectAttack=(380,250,100,400,100)
-            self.rectAttack=(0,550,500,100,500)   
+            self.rectAttack=(0,550,500,100,500)  
+        elif self.type =='nhilangthan':
+            self.rectedit=(60,105,35,50)
+            self.rectTuongTacEdit=(58,77,50,80)     
+            self.rectAttack=(60,-55,130,175,55) 
+        elif self.type == 'riuthan':
+            self.rectedit=(130,450,35,50)
+            self.rectTuongTacEdit=(19,50,35,50)
+            self.rectAttack=(-50,350,300,150,40)
              
 
         self.collision = {'up':False,'down':False,'right':False,'left':False}
@@ -198,9 +206,9 @@ class PhysicsEntity:
 
     # lấy ảnh
     def render(self,surf,offset=(0,0)):# off set đẻ nhận vật luôn ở vị trí trung tâm camera
-        #pygame.draw.rect(surf, (0, 0, 255), self.rectattack(offset), 2)  # Viền đỏ
-        #pygame.draw.rect(surf, (0, 255, 0), self.recttuongtac(offset), 2)  # Viền xanh lá
-        #pygame.draw.rect(surf, (255, 0, 0), self.rect(offset), 2)  # Viền đỏ
+        pygame.draw.rect(surf, (0, 0, 255), self.rectattack(offset), 2)  # Viền đỏ
+        pygame.draw.rect(surf, (0, 255, 0), self.recttuongtac(offset), 2)  # Viền xanh lá
+        pygame.draw.rect(surf, (255, 0, 0), self.rect(offset), 2)  # Viền đỏ
         surf.blit(pygame.transform.flip(self.animation.img(),self.flip,False),(self.pos[0]-offset[0]+self.anim_offset[0],self.pos[1]-offset[1]+self.anim_offset[1]))
                                              
 

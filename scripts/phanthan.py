@@ -187,8 +187,8 @@ class PhanThan(PhysicsEntity):
                             self.set_action('die')
                     else:
                         self.hp=-1
-                        
-            if self.game.player.attacking:
+            """
+             if self.game.player.attacking:
                 if self.game.player.animation.doneToDoSomething:
                     if self.recttuongtac().colliderect(self.game.player.rectattack()):
                             if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
@@ -197,6 +197,8 @@ class PhanThan(PhysicsEntity):
                                 self.set_action('die')
                             else:
                                 self.set_action('hurt')
+            """            
+           
             for danlac  in self.game.projectiles:
                 if  danlac[3] =='kiemnangluong1' or danlac[3] =='kiemnangluong2':
                     if self.recttuongtac().collidepoint(danlac[0][0]+random.randint(-5,5),danlac[0][1]+random.randint(-45,45)):
