@@ -3,7 +3,7 @@ import os
 base_path = os.path.dirname(__file__).removesuffix('scripts')
 def get_frame(sheet, frame, width, height, scale):
     
-    image = pygame.Surface((width, height)).convert_alpha()
+    image = pygame.Surface((width, height))
     image.blit(sheet, (0, 0), ((width * frame), 0, width, height))
     image = pygame.transform.scale(image, (width * scale, height * scale))
     image.set_colorkey((0, 0, 0))
@@ -11,7 +11,7 @@ def get_frame(sheet, frame, width, height, scale):
     return image    
 def get_frames(path,scale):
     images=[]
-    sprite_sheet_image = pygame.image.load(os.path.join(base_path+'data'+path + '.png')).convert_alpha()
+    sprite_sheet_image = pygame.image.load(os.path.join(base_path+'data'+path + '.png'))
     animation_steps = int (sprite_sheet_image.get_width() / sprite_sheet_image.get_height())
 
     for x in range(animation_steps):

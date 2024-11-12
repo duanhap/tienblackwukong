@@ -122,14 +122,15 @@ class NguoiSoiDo(PhysicsEntity):
 
                 if self.action =='attackgan1':
                             self.bidanh= False
+                            if self.flip :
+                                    self.pos[0]-=1.5
+                            else:
+                                    self.pos[0]+=1.5
                             
                             if self.animation.done:
                                 self.attacking = False 
                                 self.can_move= True
-                                if self.flip and self.animation.doneToDoSomething:
-                                    self.velocity[0]=-1.5
-                                else:
-                                    self.velocity[0]=1.5  
+                                
                 if not self.attacking and not self.bidanh:
                                     
                                     if movement[0] != 0:
@@ -155,7 +156,7 @@ class NguoiSoiDo(PhysicsEntity):
                                     else:
                                         
                                         self.set_action('hurt')                
-                if self.bidanh:                        
+                if self.bidanh or self.attacking:                        
                         if self.collision['right']:     
                             self.pos[0]-=10
                         elif  self.collision['left']  :                           

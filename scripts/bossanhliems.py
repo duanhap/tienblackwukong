@@ -30,7 +30,7 @@ class BossAnhLiems(PhysicsEntity):
         self.kichthuocAttack=100
         
     def update(self, tilemap, movement=(0, 0)):
-        #print(f'{self.action}walkinh {self.walking}  attacking {self.attacking}  bi danh: {self.bidanh} canmove: {self.can_move} dang dung chieu khac { self.dangdungchieukhac} flip {self.flip}' )
+        print(f'{self.action}  walkinh {self.walking}  attacking {self.attacking}  bi danh: {self.bidanh} canmove: {self.can_move} dang dung chieu khac { self.dangdungchieukhac} flip {self.flip}' )
         dis_main9 = self.game.player.rect().centerx - self.rect().centerx
         if not self.dead:
             if self.walking:# xử lý đi trên vùng ok , chạm trái phải thì lật
@@ -63,8 +63,8 @@ class BossAnhLiems(PhysicsEntity):
                     #kc Y <16
                     if (abs(dis[1]) < 500) and abs(dis[0])<1000:
                         # đang quay trái bắn trái nếu gặp
-                        chieu = random.randint(0,7)
-                        #chieu = 2
+                        chieu = random.randint(0,8)
+                        #chieu = 8
                         if chieu ==0 and not self.dangdungchieukhac:
                             if (self.flip and dis[0] < 0) and not self.dangdungchieukhac:
                                 self.attacking = True
@@ -165,6 +165,21 @@ class BossAnhLiems(PhysicsEntity):
                                     self.dangdungchieukhac = True
                                     
                                     self.set_action('tialazegan')
+                        if chieu == 8 and not self.dangdungchieukhac:
+                            if (self.flip and dis[0] < 0):
+                                    self.attacking = True
+                                    self.dangdungchieukhac = True
+                                    
+                                    self.set_action('ne')
+                                
+                                                                        
+                            if (not self.flip and dis[0] > 0):
+                                    self.attacking = True
+                                    self.dangdungchieukhac = True
+                                    
+                                    self.set_action('ne')
+                        
+                             
                                 
                             
                     
@@ -292,6 +307,7 @@ class BossAnhLiems(PhysicsEntity):
                                         
         #17(+1) 24
         #24(+1) 32
+            
             if self.action =='luot':
                 self.bidanh = False
                 self.animation.framecuoi[0]= self.animation.img_duration *69+1
@@ -319,7 +335,39 @@ class BossAnhLiems(PhysicsEntity):
                     self.attacking = False 
                     self.can_move= True
                     self.dangdungchieukhac = False
-
+            if self.action =='block':
+                self.blocking = True
+                self.bidanh = False
+                self.rectAttack=(-40,-25,0,0,80) 
+                if self.attacking:
+                    self.attacking = False
+                if self.flip:                 
+                    self.pos[0]+=random.randint(1,2)
+                else:      
+                    self.pos[0]-=random.randint(1,2)
+                  
+                if self.animation.done:
+                    self.rectTuongTacEdit=(58,77,50,80)
+                    self.attacking = False 
+                    self.can_move= True
+                    self.dangdungchieukhac = False
+                    self.blocking = False
+                 
+            if self.action =='ne':
+                self.bidanh = False
+                self.rectAttack=(-40,-25,0,0,80) 
+                
+                if self.flip:                 
+                    self.pos[0]+=random.randint(7,10)
+                else:      
+                    self.pos[0]-=random.randint(7,10)
+                  
+                if self.animation.done:
+                    self.rectTuongTacEdit=(58,77,50,80)
+                    self.attacking = False 
+                    self.can_move= True
+                    self.dangdungchieukhac = False
+                 
             if self.action =='laodenattack':
                 self.bidanh = False
                 self.animation.framecuoi[0]= self.animation.img_duration *7+1
@@ -454,8 +502,14 @@ class BossAnhLiems(PhysicsEntity):
                                         
                                 if self.hp <=0:
                                     self.set_action('die')
-                                else:                            
-                                    self.set_action('hurt')
+                                else:  
+                                    #if random.randint(0,10) <8 and not self.blocking:                          
+                                        self.set_action('hurt')
+                                        
+                                    #else:
+                                     #   self.blocking == True
+                                     #   self.set_action('block')
+                                            
                                     
                                     
             for phanthan in self.game.phanthans:
@@ -466,8 +520,15 @@ class BossAnhLiems(PhysicsEntity):
                                                 
                                         if self.hp <=0:
                                             self.set_action('die')
-                                        else:                 
-                                            self.set_action('hurt')
+                                        else:
+                                                           
+                                                #if random.randint(0,10) <8 and not self.blocking:                          
+                                                    self.set_action('hurt')
+                                                    
+                                                #else:
+                                                 ##   self.blocking == True
+                                                 #   self.set_action('block')
+                                                    
         if self.action == 'hurt' :
             self.bidanh = True
             
@@ -484,7 +545,8 @@ class BossAnhLiems(PhysicsEntity):
             if self.animation.done:
                 self.hp-=1
                 self.bidanh = False
-                self.can_move = True     
+                self.can_move = True  
+                  
         if self.action =='die':
                 if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
                     self.bidanh =True  
@@ -507,7 +569,7 @@ class BossAnhLiems(PhysicsEntity):
             self.dead = False
             return False                                 
     def render(self, surf, offset=(0, 0)):
-        if self.action == 'phikiem' or self.action == 'laodenattack' or self.action == 'laodenattack2'or self.action =='tialazegan':
+        if self.action == 'phikiem' or self.action == 'laodenattack' or self.action == 'laodenattack2'or self.action =='tialazegan'or self.action =='ne':
             self.anim_offset=(-460,-170)
         elif self.action =='tialazemax' or self.action =='nemriu'or self.action=='die':
             self.anim_offset=(-800,-1100) 
@@ -517,7 +579,7 @@ class BossAnhLiems(PhysicsEntity):
             else:
                 self.anim_offset=(-350,-170)
                   
-        elif self.action == 'xoay' or self.action == 'combogan':
+        elif self.action == 'xoay' or self.action == 'combogan' or self.action=='block':
             self.anim_offset=(-120,-190)
         else:
             self.anim_offset=(0,0)

@@ -20,6 +20,7 @@ class Editor:
         self.assets={
             'decor':load_images('tiles/decor',(50,50),(0,0,0)),# trả về 1 mảng ảnh png
             'grass':load_images('tiles/grass',(50,50),(0,0,0)),
+            'grass3':load_images('tiles/grass3',(50,50),(0,0,0)),
             'grass2':load_images('tiles/grass2',(50,50),(255,255,255)),
             'large_decor':load_images('tiles/large_decor',None,(0,0,0),5),
             'stone':load_images('tiles/stone',(50,50),(0,0,0)),
@@ -43,7 +44,7 @@ class Editor:
         
         #hien map nào
         try:
-           self.tilemap.load('0.json')
+           self.tilemap.load('3.json')
         except FileNotFoundError:
             pass
             
@@ -165,7 +166,7 @@ class Editor:
                     if event.key == pygame.K_t:
                         self.tilemap.autotile()
                     if event.key == pygame.K_o:
-                        self.tilemap.save('0.json')
+                        self.tilemap.save('3.json')
                     if event.key == pygame.K_LSHIFT:
                         self.shift = True
                 if event.type == pygame.KEYUP:

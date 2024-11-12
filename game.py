@@ -44,10 +44,11 @@ class Game:
             #background và decor
             'decor':load_images('tiles/decor',(50,50),(0,0,0)),# trả về 1 mảng ảnh png  
             'grass':load_images('tiles/grass',(50,50),(0,0,0)),
+            'grass3':load_images('tiles/grass3',(50,50),(0,0,0)),
             'grass2':load_images('tiles/grass2',(50,50),(255,255,255)),
             'large_decor':load_images('tiles/large_decor',None,(0,0,0),5),
             'stone':load_images('tiles/stone',(50,50),(0,0,0)),
-            'stone2':load_images('tiles/grass2',(50,50),(255,255,255)),
+            'stone2':load_images('tiles/stone2',(50,50),(255,255,255)),
             'binhruou':load_image('hp3.png',(112,112),(255,255,255)),
             'amount':load_image('amount.png',(112,112),(255,255,255)),
             'noitaifull':load_image('full.png',(900,800),(255,255,255)),
@@ -160,6 +161,9 @@ class Game:
             #nhi lang than
             'nhilangthan/idle':Animation(load_images('entities/nhilangthan/idle',(172,198),(255,255,255)),img_dur=15),
             'nhilangthan/hurt':Animation(load_images('entities/nhilangthan/hurt',(172,198),(255,255,255)),img_dur=5,loop=False),
+            'nhilangthan/ne':Animation(load_images('entities/nhilangthan/ne',(1080,360),(255,255,255)),img_dur=5,loop=False),
+            'nhilangthan/block':Animation(load_images('entities/nhilangthan/block',(410,390),(255,255,255)),img_dur=5,loop=False),
+
             'nhilangthan/walk':Animation(load_images('entities/nhilangthan/walk',(172,198),(255,255,255)),img_dur=8),
             'nhilangthan/die':Animation(load_images('entities/nhilangthan/die',(1800,1300),(255,255,255)),img_dur=15,loop = False),
             'nhilangthan/phikiem':Animation(load_images('entities/nhilangthan/phikiem',(1080,360),(255,255,255)),img_dur=8,loop = False),
