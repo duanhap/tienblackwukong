@@ -163,9 +163,9 @@ class Game:
             'nhilangthan/hurt':Animation(load_images('entities/nhilangthan/hurt',(172,198),(255,255,255)),img_dur=5,loop=False),
             'nhilangthan/ne':Animation(load_images('entities/nhilangthan/ne',(1080,360),(255,255,255)),img_dur=5,loop=False),
             'nhilangthan/block':Animation(load_images('entities/nhilangthan/block',(410,390),(255,255,255)),img_dur=5,loop=False),
-
+            'nhilangthan/xuathien':Animation(load_images('entities/nhilangthan/xuathien',(2000,1300),(255,255,255)),img_dur=6.5,loop = False),
             'nhilangthan/walk':Animation(load_images('entities/nhilangthan/walk',(172,198),(255,255,255)),img_dur=8),
-            'nhilangthan/die':Animation(load_images('entities/nhilangthan/die',(1800,1300),(255,255,255)),img_dur=15,loop = False),
+            'nhilangthan/die':Animation(load_images('entities/nhilangthan/die',(2000,1300),(255,255,255)),img_dur=8,loop = False),
             'nhilangthan/phikiem':Animation(load_images('entities/nhilangthan/phikiem',(1080,360),(255,255,255)),img_dur=8,loop = False),
             'nhilangthan/tialazemax':Animation(load_images('entities/nhilangthan/tialazeoeoeoe',(1800,1300),(255,255,255)),img_dur=6.5,loop = False),
             'nhilangthan/nemriu':Animation(load_images('entities/nhilangthan/xenuisavemom',(1800,1300),(255,255,255)),img_dur=6.5,loop = False),
@@ -193,13 +193,13 @@ class Game:
 
 
 
-            'phanthan/idle':Animation(load_images('entities/trubatgioi',(110,125),(255,255,255)),img_dur=15),
-            'phanthan/run':Animation(load_images('entities/trubatgioi',(110,125),(255,255,255)),img_dur=10),
+            'phanthan/idle':Animation(load_images('entities/player/idle',(110,125),(255,255,255)),img_dur=15),
+            'phanthan/run':Animation(load_images('entities/player/run',(110,125),(255,255,255)),img_dur=10),
             'phanthan/jump':Animation(load_images('entities/player/jump',(95,125),(255,255,255))),
             'phanthan/hurt':Animation(load_images('entities/player/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
 
             #'player/slide':Animation(load_images('entities/player/slide',(95,125),(255,255,255))),
-            'phanthan/attack':Animation(load_images('entities/player/attack',(300,300),(255,255,255)),img_dur=5,loop=False),
+            'phanthan/attack':Animation(load_images('entities/trubatgioi/attackgan',(110,125),(0,0,0)),img_dur=5,loop=False),
             'phanthan/die':Animation(load_images('entities/player/die',(200,200),(0,0,0)),img_dur=10,loop=False),
 
 
@@ -229,10 +229,12 @@ class Game:
             'tocbienquai':pygame.mixer.Sound('data/sfx/tocbienquai.mp3'),
             'bidanh':pygame.mixer.Sound('data/sfx/bidanh.mp3'),
             'wukongvoicechieudai':pygame.mixer.Sound('data/sfx/wukongvoicechieudai.mp3'),
-            'boom':pygame.mixer.Sound('data/sfx/boom.mp3')
+            'boom':pygame.mixer.Sound('data/sfx/boom.mp3'),
+            'xakiem':pygame.mixer.Sound('data/sfx/xakiem.mp3'),
         }
         self.sfx['chuyencanh'].set_volume(0.01)
-        self.sfx['boom'].set_volume(0.01) 
+        self.sfx['boom'].set_volume(0.01)
+        self.sfx['xakiem'].set_volume(0.1   ) 
         self.sfx['tocbien'].set_volume(0.5)
         self.sfx['tocbienquai'].set_volume(5.1)
         self.sfx['bidanh'].set_volume(7)
@@ -435,13 +437,27 @@ class Game:
                 pygame.mixer.music.set_volume(0.5)
                 pygame.mixer.music.play(-1) # Phát nhạc lặp lại
                 current_music = 'intro'
-            elif self.level!=0 and current_music != 'khoidau':
+            elif self.level==1 and current_music != 'khoidau':
                 self.anhem=4
                 pygame.mixer.music.stop()
                 pygame.mixer.music.load('data/khoidau.mp3')
                 pygame.mixer.music.set_volume(0.5)
                 pygame.mixer.music.play(-1)
                 current_music = 'khoidau'
+            elif self.level==2 and current_music != 'lv2':
+                self.anhem=4
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('data/lv2.mp3')
+                pygame.mixer.music.set_volume(0.2)
+                pygame.mixer.music.play(-1)
+                current_music = 'lv2'
+            elif self.level==3 and current_music != 'lv3':
+                self.anhem=4
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('data/lv3.mp3')
+                pygame.mixer.music.set_volume(0.2)
+                pygame.mixer.music.play(-1)
+                current_music = 'lv3'
             """
              if self.level==2 and len(self.enemies) ==0:
                 self.clip = VideoFileClip("data/ending.mp4")

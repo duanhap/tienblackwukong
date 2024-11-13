@@ -12,7 +12,6 @@ class BossNguoiDa(PhysicsEntity):
         self.walking = 0
         self.dan=''
         self.banchua= False
-        self.chuanbixong = True
         self.attacking = False
         self.hp =20
         self.hp_max = 20
