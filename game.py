@@ -15,6 +15,7 @@ from scripts.nguoisoi import NguoiSoi
 from scripts.nguoisoido import NguoiSoiDo
 from scripts.bossnguoida import BossNguoiDa
 from scripts.bossanhliems import BossAnhLiems
+from scripts.trubatgioi import TruBatGioi
 from scripts.npcsoi import NpcSoi
 from scripts.Enemy import Enemy
 from scripts.tilemap import Tilemap
@@ -187,11 +188,11 @@ class Game:
 
 
             #trubatgioi
-            #'trubatgioi/idle':Animation(load_images('entities/trubatgioi/idle',(95,125),(255,255,255)),img_dur=15),
-            #'trubatgioi/run':Animation(load_images('entities/trubatgioi/run',(95,125),(255,255,255)),img_dur=10),
+            'trubatgioi/idle':Animation(load_images('entities/trubatgioi/idle',(320,260),(255,255,255)),img_dur=15),
+            'trubatgioi/run':Animation(load_images('entities/trubatgioi/run',(320,260),(255,255,255)),img_dur=10),
             #'trubatgioi/jump':Animation(load_images('entities/trubatgioi/jump',(95,125),(255,255,255))),
             #'trubatgioi/hurt':Animation(load_images('entities/trubatgioi/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
-            #'trubatgioi/attack':Animation(load_images('entities/trubatgioi/attack',(300,300),(255,255,255)),img_dur=5,loop=False),
+            'trubatgioi/attack':Animation(load_images('entities/trubatgioi/attack',(320,260),(255,255,255)),img_dur=5,loop=False),
 
 
  
@@ -381,7 +382,8 @@ class Game:
         self.npc=[]
         for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1),('spawners', 2),
                                              ('spawners', 3),('spawners', 4),('spawners', 5),
-                                             ('spawners', 6),('spawners', 7),('spawners',8)]):
+                                             ('spawners', 6),('spawners', 7),('spawners',8),
+                                             ('spawners', 9)]):
             if spawner['variant'] == 0:
                 self.player.pos = spawner['pos']
                 self.player.air_time =0
@@ -401,6 +403,8 @@ class Game:
                 self.enemies.append(BossNguoiDa(self, spawner['pos'], (75, 100)))
             if spawner['variant'] == 8:
                 self.enemies.append(BossAnhLiems(self, spawner['pos'], (75, 100)))
+            if spawner['variant'] == 9:
+                self.npc.append(TruBatGioi(self, spawner['pos'], (75, 100)))
             
         self.projectiles = [] #đạn bắn
         self.particles = []
@@ -622,9 +626,9 @@ class Game:
                 font = pygame.font.Font(None, 50)
                 text_surface = font.render(str(len(self.enemies)), True, (0,0,0))
                 text_surfaceX = font.render("X", True, (0,0,0))
-                self.screen.blit(text_surface, (900, 50))
-                self.screen.blit(text_surfaceX, (950, 50))
-                self.screen.blit(self.assets['amount'],(960,20))  
+                self.screen.blit(text_surface, (self.screen.get_width() - 200, 50))
+                self.screen.blit(text_surfaceX, (self.screen.get_width() - 150, 50))
+                self.screen.blit(self.assets['amount'],(self.screen.get_width() - 140,20))  
                         
             #ênmy
             for enemy in self.enemies.copy():
@@ -642,20 +646,13 @@ class Game:
                     self.enemies.remove(enemy)
                 else:
                     if enemy.type=='bosschim'and self.player.pos[0]>2800 and self.player.pos[0]<5300  and enemy.mainBoss==True:
-                        tang =0
-                        if self.game_state.fullscreen:
-                            tang = 300
-                        else:
-                            tang =0
-                        draw_health_bar(self.screen,450+tang,  700+tang,enemy.hp, enemy.hp_max,(255,0,0),500,20)
-                    if enemy.type=="bossnguoida" and self.player.pos[0]<-2400 and self.player.pos[0]>-4800:
-                        tang =0
                         
-                        if self.game_state.fullscreen:
-                            tang = 300
-                        else:
-                            tang =0
-                        draw_health_bar(self.screen,450+tang,  700+tang,enemy.hp, enemy.hp_max,(255,0,0),500,20)
+                        draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
+                    if enemy.type=="bossnguoida" and self.player.pos[0]<-2400 and self.player.pos[0]>-4800:
+                        
+                        
+                        
+                        draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
 
             #phanthan
             for phanthan in self.phanthans.copy():
@@ -759,7 +756,7 @@ class Game:
                     self.particles.remove(particle)
           
 
-
+            """
             #thanh máu
             if self.level!=0:
                 tang =0
@@ -775,9 +772,21 @@ class Game:
                 draw_bar_hp(self.screen, 1090+tang*1.5, 590+tang, self.player.noitai, self.player.noitai_max,(255, 0, 0),10,120,False) 
                 self.screen.blit(self.assets['noitaichuafull'],(600+tang*1.5,20+tang))
                 if self.player.noitai>=10:
-                   self.screen.blit(self.assets['noitaifull'],(600+tang*1.5,20+tang))      
+                   self.screen.blit(self.assets['noitaifull'],(600+tang*1.5,20+tang))  
+            """
+                
 
-         
+            #thanh máu
+            if self.level!=0:
+                draw_health_bar(self.screen, 180, self.screen.get_height() - 112 , self.player.hp, self.player.hp_max,(220, 220, 220))
+                draw_health_bar(self.screen, 180, self.screen.get_height() - 112 + 25, self.player.mana, self.player.mana_max,(0, 0, 139),40,10)
+                draw_health_bar(self.screen, 180, self.screen.get_height() - 112 + 40, self.player.stamina, self.player.stamina_max,(255, 255, 0),150,10)
+                draw_bar_hp(self.screen, 52, self.screen.get_height() - 160 + 5, self.player.binhhp, self.player.binhhpmax,(220, 220, 220),100,100)
+                self.screen.blit(self.assets['binhruou'],(50,self.screen.get_height() - 160))
+                draw_bar_hp(self.screen, self.screen.get_width() - 70, self.screen.get_height() - 170, self.player.noitai, self.player.noitai_max,(255, 0, 0),10,120,False)
+                self.screen.blit(self.assets['noitaichuafull'],(self.screen.get_width() - 560,self.screen.get_height() - 740))
+                if self.player.noitai>=10:
+                   self.screen.blit(self.assets['noitaifull'],(self.screen.get_width() - 560,self.screen.get_height() - 740))
              #npc
             for npc1 in self.npc.copy():
                 npc1.update(self.tilemap, (0, 0))
