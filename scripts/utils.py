@@ -95,10 +95,15 @@ class Animation:
 
     
 #tat tieng music
-def toggle_mute(muted,listmusic):
-    volume = 0 if muted else 1
-    pygame.mixer.music.set_volume(volume)  # Đặt âm lượng nhạc nền
-    for sound in listmusic.values():  # Cập nhật âm lượng cho từng âm thanh
-        sound.set_volume(volume)
+def toggle_mute(muted,listmusic,original_volumes):
+    if not muted:
+        pygame.mixer.music.set_volume(0)  # Tắt tiếng nhạc nền
+        for sound in listmusic.values():
+            sound.set_volume(0)  # Tắt tiếng các âm thanh
+    else:
+        pygame.mixer.music.set_volume(1)  # Bật nhạc nền với âm lượng tối đa
+        for key, sound in listmusic.items():
+            sound.set_volume(original_volumes[key])  # Khôi phục âm lượng ban đầu
+
 
     

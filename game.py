@@ -3,6 +3,9 @@ import math
 import os
 import random
 import sys
+from scripts.menu import Menu
+from scripts.settings import GameState
+from scripts.settings import *
 from scripts.utils import load_image,load_images,Animation,draw_health_bar,draw_bar_hp,toggle_mute
 from scripts.animation2 import get_frame,get_frames,Animation2
 from scripts.Player import Player
@@ -24,11 +27,13 @@ import pygame
 from moviepy.editor import VideoFileClip
 
 
+
 #make your game its own object
 class Game:
     def __init__(self):
         pygame.init()
-        self.fullscreen = False
+        self.game_state = GameState()
+        self.menu = Menu(self,self.game_state)
        
         # đặt tên ứng dụng
         pygame.display.set_caption('BLACK MYTH WUKONG')
@@ -63,6 +68,7 @@ class Game:
             'stonegrass':load_images('tiles/stonegrass',None,(0,0,0),2),
             'ice':load_images('tiles/ice',None,(0,0,0),2),
             'background3':load_image('background3.png',(1200,800)),
+            'menu':load_image('menu.jpg',(1200,800)),
             
              #dan lam
             'background2':load_image('background2.png',(1200,800)),
@@ -82,6 +88,7 @@ class Game:
             'enemy/idle': Animation(load_images('entities/enemy/idle',(75, 100),(0,0,0)), img_dur=6),
             'enemy/run': Animation(load_images('entities/enemy/run',(75,100),(0,0,0)), img_dur=4),
 
+            #cungthu
             'cungthu/idle': Animation(load_images('entities/cungthu/idle',(200, 200),(255,255,255)), img_dur=6),
             'cungthu/run': Animation(load_images('entities/cungthu/run',(200,200),(255,255,255)), img_dur=4),
             'cungthu/attack': Animation(load_images('entities/cungthu/attack',(200,200),(255,255,255)), img_dur=9,loop=False),
@@ -92,7 +99,7 @@ class Game:
             'cungthu/hurt': Animation(load_images('entities/cungthu/hurt',(200,200),(255,255,255)), img_dur=17,loop=False),
             'cungthu/die': Animation(load_images('entities/cungthu/die',(200,200),(255,255,255)), img_dur=12,loop=False),
             
-
+            #bosschim
             'bosschim/idle': Animation(load_images('entities/bosschim/idle',(400, 400),(255,255,255)), img_dur=10),
             'bosschim/walk': Animation(load_images('entities/bosschim/walk',(400,400),(255,255,255)), img_dur=4),
             'bosschim/attackkiemchuanbi': Animation(load_images('entities/bosschim/attackiemchuanbi',(400,400),(255,255,255)), img_dur=19,loop=False),
@@ -104,7 +111,7 @@ class Game:
             'bosschim/tipcan': Animation(load_images('entities/bosschim/tipcan',(400,400),(255,255,255)), img_dur=6,loop=True),
             'bosschim/jump': Animation(load_images('entities/bosschim/jump',(400,400),(255,255,255)), img_dur=2,loop=False),
 
-
+            #player
             'player/idle':Animation(load_images('entities/player/idle',(95,125),(255,255,255)),img_dur=15),
             'player/run':Animation(load_images('entities/player/run',(95,125),(255,255,255)),img_dur=10),
             'player/phanthanskill':Animation(load_images('entities/player/phanthanskill',(95,125),(255,255,255)),img_dur=12,loop=False),
@@ -142,7 +149,7 @@ class Game:
                                                 get_frames('\\images\\entities\\nguoisoido\\attackgan3',2), img_dur=6.9,loop=False),
             
 
-            
+            #boss ngươi da
             'bossnguoida/idle': Animation(load_images('entities/bossnguoida/idle',(1100,800),(255,255,255)),img_dur=10,loop=True),
             'bossnguoida/attackchocxa': Animation(load_images('entities/bossnguoida/attack',(1100,800),(255,255,255)),img_dur=7,loop=False),
             'bossnguoida/attackgan': Animation(load_images('entities/bossnguoida/attackgan',(1100,800),(255,255,255)),img_dur=6,loop=False),
@@ -179,12 +186,20 @@ class Game:
             'nhilangthan/tialazegan':Animation(load_images('entities/nhilangthan/tialazegan',(1080,360),(255,255,255)),img_dur=4,loop = False),
 
 
+            #trubatgioi
+            #'trubatgioi/idle':Animation(load_images('entities/trubatgioi/idle',(95,125),(255,255,255)),img_dur=15),
+            #'trubatgioi/run':Animation(load_images('entities/trubatgioi/run',(95,125),(255,255,255)),img_dur=10),
+            #'trubatgioi/jump':Animation(load_images('entities/trubatgioi/jump',(95,125),(255,255,255))),
+            #'trubatgioi/hurt':Animation(load_images('entities/trubatgioi/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
+            #'trubatgioi/attack':Animation(load_images('entities/trubatgioi/attack',(300,300),(255,255,255)),img_dur=5,loop=False),
 
 
  
 
             #npc
             'npcsoi/idle': Animation2(get_frames('\\images\\entities\\npcsoi\\idle',0.3), img_dur=8,loop=True),
+
+            #loithoai
             'loithoainpc':Animation(load_images('entities/loithoai',(1200,400),(255,255,255)),img_dur=400,loop=True),
             'loithoaichim':Animation(load_images('entities/bosschim/loithoai',(1000,300),(255,255,255)),img_dur=300,loop=True),
 
@@ -192,14 +207,12 @@ class Game:
 
 
 
-
-            'phanthan/idle':Animation(load_images('entities/player/idle',(110,125),(255,255,255)),img_dur=15),
-            'phanthan/run':Animation(load_images('entities/player/run',(110,125),(255,255,255)),img_dur=10),
+            #phanthan
+            'phanthan/idle':Animation(load_images('entities/player/idle',(95,125),(255,255,255)),img_dur=15),
+            'phanthan/run':Animation(load_images('entities/player/run',(95,125),(255,255,255)),img_dur=10),
             'phanthan/jump':Animation(load_images('entities/player/jump',(95,125),(255,255,255))),
             'phanthan/hurt':Animation(load_images('entities/player/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
-
-            #'player/slide':Animation(load_images('entities/player/slide',(95,125),(255,255,255))),
-            'phanthan/attack':Animation(load_images('entities/trubatgioi/attackgan',(110,125),(0,0,0)),img_dur=5,loop=False),
+            'phanthan/attack':Animation(load_images('entities/player/attack',(300,300),(255,255,255)),img_dur=5,loop=False),
             'phanthan/die':Animation(load_images('entities/player/die',(200,200),(0,0,0)),img_dur=10,loop=False),
 
 
@@ -240,9 +253,10 @@ class Game:
         self.sfx['bidanh'].set_volume(7)
         self.sfx['chamvukhi'].set_volume(5.1)
         self.sfx['wukongvoicechieudai'].set_volume(1.1)
-        self.music = True
+
         self.clip = VideoFileClip("data/demo.mp4")
         self.show_intro_video()  # Play the intro video
+        self.original_volumes = {key: sound.get_volume() for key, sound in self.sfx.items()}
 
         
 
@@ -295,8 +309,8 @@ class Game:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
-                        self.fullscreen = not self.fullscreen
-                        if self.fullscreen:
+                        self.game_state.fullscreen = not self.game_state.fullscreen
+                        if self.game_state.fullscreen:
                             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Chuyển sang fullscreen
                         else:
                             self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
@@ -331,8 +345,8 @@ class Game:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
-                        self.fullscreen = not self.fullscreen
-                        if self.fullscreen:
+                        self.game_state.fullscreen = not self.game_state.fullscreen
+                        if self.game_state.fullscreen:
                             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Chuyển sang fullscreen
                         else:
                             self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
@@ -477,7 +491,7 @@ class Game:
             # set BG cho mỗi map
             if self.level ==0 :
                 
-                if self.fullscreen:
+                if self.game_state.fullscreen:
                     info = pygame.display.Info()
                     self.assets['background'] =load_image('background.png',(info.current_w,info.current_h))
                     self.screen.blit(self.assets['background'],(0,0))
@@ -486,7 +500,7 @@ class Game:
                     self.screen.blit(self.assets['intro'],(0,0))
                     render_scroll=(0,0)     
             elif self.level ==1:
-                if self.fullscreen:
+                if self.game_state.fullscreen:
                     info = pygame.display.Info()
                     self.assets['background'] =load_image('background.png',(info.current_w,info.current_h))
                 else:
@@ -494,7 +508,7 @@ class Game:
                 
                 self.screen.blit(self.assets['background'],(0,0))
             elif self.level ==2:
-                if self.fullscreen:
+                if self.game_state.fullscreen:
                     info = pygame.display.Info()
                     self.assets['background22'] =load_image('background22.png',(info.current_w,info.current_h))
                 else:
@@ -503,7 +517,7 @@ class Game:
                 self.screen.blit(self.assets['background2'],(0,0))
             
             elif self.level ==3:
-                if self.fullscreen:
+                if self.game_state.fullscreen:
                     info = pygame.display.Info()
                     self.assets['background3'] =load_image('background3.png',(info.current_w,info.current_h))
                 else:
@@ -525,7 +539,7 @@ class Game:
                 self.clouds2.render(self.screen,offset = render_scroll)
 
 
-            if self.level ==0  and self.fullscreen:
+            if self.level ==0  and self.game_state.fullscreen:
                 info = pygame.display.Info()
                 self.assets['introword'] =load_image('introword3.png',(info.current_w,info.current_h),(0,0,0))
                 self.screen.blit(self.assets['introword'],(0,0))
@@ -629,7 +643,7 @@ class Game:
                 else:
                     if enemy.type=='bosschim'and self.player.pos[0]>2800 and self.player.pos[0]<5300  and enemy.mainBoss==True:
                         tang =0
-                        if self.fullscreen:
+                        if self.game_state.fullscreen:
                             tang = 300
                         else:
                             tang =0
@@ -637,7 +651,7 @@ class Game:
                     if enemy.type=="bossnguoida" and self.player.pos[0]<-2400 and self.player.pos[0]>-4800:
                         tang =0
                         
-                        if self.fullscreen:
+                        if self.game_state.fullscreen:
                             tang = 300
                         else:
                             tang =0
@@ -749,7 +763,7 @@ class Game:
             #thanh máu
             if self.level!=0:
                 tang =0
-                if self.fullscreen:
+                if self.game_state.fullscreen:
                     tang = 300
                 else:
                     tang =0
@@ -816,9 +830,12 @@ class Game:
 
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            self.game_state.paused = not self.game_state.paused
                     if event.key == pygame.K_f:
-                        self.fullscreen = not self.fullscreen
-                        if self.fullscreen:
+                        self.game_state.fullscreen = not self.game_state.fullscreen
+                        if self.game_state.fullscreen:
                             self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Chuyển sang fullscreen
                         else:
                             self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
@@ -835,11 +852,8 @@ class Game:
                             speed = random.random() * 2 + 1
                             pvelocity = [math.cos(angle) * speed, math.sin(angle) * speed]
                             self.particles.append(Particle(self, 'particlewukong', self.player.rect().center, velocity=pvelocity, frame=random.randint(0, 7)))                 
-                    if event.key == pygame.K_DOWN:
-                        
-                        self.player.blocking = True
-                        
-                        
+                    if event.key == pygame.K_DOWN:            
+                        self.player.blocking = True                  
                     if event.key == pygame.K_c:
                         
                         self.player.tichnoitai=True
@@ -852,9 +866,7 @@ class Game:
                         self.player.dash()
                     if event.key == pygame.K_m:
                         self.enemies.clear()
-                    if event.key == pygame.K_n:
-                        self.music = not self.music
-                        toggle_mute(self.music,self.sfx)
+                    
                        
                     if event.key == pygame.K_v and self.player.binhhp>0:
                         self.player.binhhp-=1
@@ -877,6 +889,29 @@ class Game:
                     if event.key == pygame.K_c:
                         self.player.tichnoitai = False
                         self.player.dieukiendanhnoitai=0
+                if self.game_state.paused:
+                    selected = self.menu.handle_event(event)
+                    if selected == "Sound":
+                        self.game_state.sound_on = not self.game_state.sound_on
+                        toggle_mute(self.game_state.sound_on,self.sfx,self.original_volumes)  # Dừng nhạc nếu tắt âm thanh
+                    elif selected == "Fullscreen":
+                        self.game_state.fullscreen = not self.game_state.fullscreen
+                        if self.game_state.fullscreen:
+                            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Chuyển sang fullscreen
+                        else:
+                            self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
+                    elif selected == "Resume":
+                        self.game_state.paused = False
+                    elif selected == "Quit":
+                        self.game_state.running = False
+                        pygame.quit()
+                
+
+            if self.game_state.paused:
+                self.menu.draw(self.screen)
+                pygame.display.update()
+                continue
+            
                         
             # hiệu ứng chuyển map
             if self.transition:
