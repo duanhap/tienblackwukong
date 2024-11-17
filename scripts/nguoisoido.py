@@ -10,9 +10,6 @@ class NguoiSoiDo(PhysicsEntity):
     def __init__(self, game, pos, size):
         super().__init__(game, 'nguoisoido', pos, size)
         self.walking = 0
-        self.dan=''
-        self.banchua= False
-        self.chuanbixong = True
         self.attacking = False
         self.hp =10
         self.hp_max = 10
@@ -146,23 +143,25 @@ class NguoiSoiDo(PhysicsEntity):
                                             self.set_action('die')
                                         else:
                                             self.set_action('hurt')
+                                            self.hp-=0.05 
                 for phanthan in self.game.phanthans:
                     if phanthan.animation.doneToDoSomething:
                             if self.recttuongtac().colliderect(phanthan.rectattack()):
-                                    if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
-                                        self.bidanh =True          
+                                   
                                     if self.hp <=0:
                                         self.set_action('die')
                                     else:
                                         
-                                        self.set_action('hurt')                
+                                        self.set_action('hurt') 
+                                        self.hp-=0.05 
+
                 if self.bidanh or self.attacking:                        
                         if self.collision['right']:     
                             self.pos[0]-=10
                         elif  self.collision['left']  :                           
                             self.pos[0]+=10 
         if self.action == 'hurt' :
-            
+            self.can_move = False
             if self.game.player.flip == False:
                 self.pos[0] +=random.randint(1,5)
                 
@@ -171,9 +170,9 @@ class NguoiSoiDo(PhysicsEntity):
 
             if self.attacking:
                self.attacking = False
-            self.can_move = False
+            
             if self.animation.done:
-                self.hp-=1
+                
                 if self.game.player.flip:
                     if self.flip:
                         self.flip = False
@@ -202,6 +201,7 @@ class NguoiSoiDo(PhysicsEntity):
                 self.can_move = False
                 
                 if self.animation.done:
+                    self.game.player.binhhp+=1
                     self.dead = True
                     for i in range(30):
                         angle = random.random() * math.pi * 2

@@ -29,6 +29,8 @@ class BossNguoiDa(PhysicsEntity):
         self.vitridaukhungattacknotflip=530
         
     def update(self, tilemap, movement=(0, 0)):
+        #print(f'{self.action}  walkinh: {self.walking}  attacking {self.attacking}  bi danh: {self.bidanh} canmove: {self.can_move}  flip {self.flip}' )
+
         disx1 = self.rect().centerx -self.game.player.rect().centerx
         disy1 = self.rect().centery -self.game.player.recttuongtac().centery
         # check chạm tường thì bị nảy lại
@@ -183,7 +185,8 @@ class BossNguoiDa(PhysicsEntity):
                         self.velocity[0] = min(self.velocity[0] + 0.1, 0)
 
                     if self.action == 'block' :
-                        self.bidanh=True
+                        self.bidanh=False
+                        
                         
                         if self.game.player.flip == False:
                             self.pos[0] +=random.randint(1,3)

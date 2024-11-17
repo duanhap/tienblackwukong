@@ -14,7 +14,9 @@ class Loithoai:
         if type=='npc':
             self.animation = surf.assets['loithoainpc'].copy() #'player/idle'
         elif type=='bosschim':
-            self.animation = surf.assets['loithoaichim'].copy() #'player/idle'   
+            self.animation = surf.assets['loithoaichim'].copy() #'player/idle'  
+        elif type=='batgioi':
+            self.animation = surf.assets['loithoaibatgioi'].copy() #'player/idle'       
     def update(self):
         self.animation.update()
     def render(self,surf,pos):

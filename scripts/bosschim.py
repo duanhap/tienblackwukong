@@ -44,9 +44,7 @@ class BossChim(PhysicsEntity):
                 self.demthoigiannoi+=1
                 if abs(disloinoi[0])<1500 and self.demthoigiannoi <300: 
                     self.loithoai.update()
-                    if self.game.fullscreen:
-                         self.loithoai.render(self.game.screen,(720,70))
-                    else: self.loithoai.render(self.game.screen,(200,0))
+                    self.loithoai.render(self.game.screen,(self.game.screen.get_width() - 1000,0))
                 if self.demthoigiannoi >1200:
                     self.demthoigiannoi =0
                 if random.randint(0,100)<5  and self.hp<= 13 and self.mainBoss==True and self.soLanPhanthan>0:

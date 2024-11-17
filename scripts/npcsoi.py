@@ -35,7 +35,7 @@ class NpcSoi(PhysicsEntity):
         if abs(dis[0])<100 and abs(dis[1])<300:
             
             self.loithoai.update()
-            self.loithoai.render(self.game.screen,(0,400))
+            self.loithoai.render(self.game.screen,(0,self.game.screen.get_height() - 400))
             
          
             

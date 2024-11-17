@@ -33,13 +33,31 @@ class Player(PhysicsEntity):
 
         self.tichnoitai=False
         self.dieukiendanhnoitai=0
+
+
+        self.xuathien = False
+        self.timexuathien =0
+        self.xuathienomap1=1
         
 
     def update(self,tilemap,movement=(0,0)):
         super().update(tilemap, movement=movement)
         self.stamina= min(10,self.stamina+0.032)
+        if self.game.level ==1 and self.xuathienomap1 :
+            self.xuathien = True
+        if self.xuathien ==True:
+            self.timexuathien+=1
+           # self.can_move = False
+            if self.timexuathien<450 and self.timexuathien>250:
+                movement = [True,False]
+                self.pos[0]+=2
+               
+            elif self.timexuathien>450:
+                self.can_move = True
+                self.xuathien =False
+                self.xuathienomap1=0
+                movement = [False,False]
         
-
         #diu kien danh noi tai
         if self.tichnoitai:
             self.dieukiendanhnoitai+=10

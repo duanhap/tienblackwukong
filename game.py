@@ -35,6 +35,7 @@ class Game:
         pygame.init()
         self.game_state = GameState()
         self.menu = Menu(self,self.game_state)
+        self.capnhatvitriplayer = True
        
         # đặt tên ứng dụng
         pygame.display.set_caption('BLACK MYTH WUKONG')
@@ -72,7 +73,7 @@ class Game:
             'menu':load_image('menu.jpg',(1200,800)),
             
              #dan lam
-            'background2':load_image('background2.png',(1200,800)),
+            'background2':load_image('background22.png',(1200,800)),
             'groundforest':load_images('tiles/groundforest',(50,50),(0,0,0)),
             'caydamlay':load_images('tiles/caydamlay',None,(255,255,255),2),
             
@@ -189,7 +190,7 @@ class Game:
 
             #trubatgioi
             'trubatgioi/idle':Animation(load_images('entities/trubatgioi/idle',(320,260),(255,255,255)),img_dur=15),
-            'trubatgioi/run':Animation(load_images('entities/trubatgioi/run',(320,260),(255,255,255)),img_dur=10),
+            'trubatgioi/run':Animation(load_images('entities/trubatgioi/run',(320,260),(255,255,255)),img_dur=5),
             #'trubatgioi/jump':Animation(load_images('entities/trubatgioi/jump',(95,125),(255,255,255))),
             #'trubatgioi/hurt':Animation(load_images('entities/trubatgioi/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
             'trubatgioi/attack':Animation(load_images('entities/trubatgioi/attack',(320,260),(255,255,255)),img_dur=5,loop=False),
@@ -203,6 +204,8 @@ class Game:
             #loithoai
             'loithoainpc':Animation(load_images('entities/loithoai',(1200,400),(255,255,255)),img_dur=400,loop=True),
             'loithoaichim':Animation(load_images('entities/bosschim/loithoai',(1000,300),(255,255,255)),img_dur=300,loop=True),
+            'loithoaibatgioi':Animation(load_images('entities/trubatgioi/loithoai',(1200,400),(255,255,255)),img_dur=160,loop=True),
+
 
             
 
@@ -487,8 +490,9 @@ class Game:
                 
            
             #camera theo player
-            self.scroll[0]+=(self.player.rect().centerx-self.screen.get_width()/2-self.scroll[0])/50
-            self.scroll[1]+=(self.player.rect().centery-90-self.screen.get_height()/2-self.scroll[1])/3
+            if self.capnhatvitriplayer:
+                self.scroll[0]+=(self.player.rect().centerx-self.screen.get_width()/2-self.scroll[0])/50
+                self.scroll[1]+=(self.player.rect().centery-90-self.screen.get_height()/2-self.scroll[1])/3
             render_scroll =(int(self.scroll[0]),int(self.scroll[1]))
 
         
@@ -514,9 +518,9 @@ class Game:
             elif self.level ==2:
                 if self.game_state.fullscreen:
                     info = pygame.display.Info()
-                    self.assets['background22'] =load_image('background22.png',(info.current_w,info.current_h))
+                    self.assets['background2'] =load_image('background22.png',(info.current_w,info.current_h))
                 else:
-                    self.assets['background22'] =load_image('background22.png',(1200,800))
+                    self.assets['background2'] =load_image('background22.png',(1200,800))
             
                 self.screen.blit(self.assets['background2'],(0,0))
             
@@ -542,11 +546,13 @@ class Game:
                 self.clouds2.update()
                 self.clouds2.render(self.screen,offset = render_scroll)
 
-
+            
+            
             if self.level ==0  and self.game_state.fullscreen:
                 info = pygame.display.Info()
                 self.assets['introword'] =load_image('introword3.png',(info.current_w,info.current_h),(0,0,0))
                 self.screen.blit(self.assets['introword'],(0,0))
+            
                 
 
             #tilemap
@@ -646,12 +652,11 @@ class Game:
                     self.enemies.remove(enemy)
                 else:
                     if enemy.type=='bosschim'and self.player.pos[0]>2800 and self.player.pos[0]<5300  and enemy.mainBoss==True:
-                        
+                       
                         draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
-                    if enemy.type=="bossnguoida" and self.player.pos[0]<-2400 and self.player.pos[0]>-4800:
-                        
-                        
-                        
+                    if enemy.type=="bossnguoida" and self.player.pos[0]<-2400 and self.player.pos[0]>-4800:          
+                        draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
+                    if enemy.type=="nhilangthan" and self.player.pos[0]<3971 and self.player.pos[0]>3971:          
                         draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
 
             #phanthan
@@ -756,26 +761,6 @@ class Game:
                     self.particles.remove(particle)
           
 
-            """
-            #thanh máu
-            if self.level!=0:
-                tang =0
-                if self.game_state.fullscreen:
-                    tang = 300
-                else:
-                    tang =0
-                draw_health_bar(self.screen, 180, 650+tang, self.player.hp, self.player.hp_max,(220, 220, 220))
-                draw_health_bar(self.screen, 180, 675+tang, self.player.mana, self.player.mana_max,(0, 0, 139),40,10)
-                draw_health_bar(self.screen, 180, 695+tang, self.player.stamina, self.player.stamina_max,(255, 255, 0),150,10)
-                draw_bar_hp(self.screen, 52, 600+tang, self.player.binhhp, self.player.binhhpmax,(220, 220, 220),100,100)
-                self.screen.blit(self.assets['binhruou'],(50,595+tang))
-                draw_bar_hp(self.screen, 1090+tang*1.5, 590+tang, self.player.noitai, self.player.noitai_max,(255, 0, 0),10,120,False) 
-                self.screen.blit(self.assets['noitaichuafull'],(600+tang*1.5,20+tang))
-                if self.player.noitai>=10:
-                   self.screen.blit(self.assets['noitaifull'],(600+tang*1.5,20+tang))  
-            """
-                
-
             #thanh máu
             if self.level!=0:
                 draw_health_bar(self.screen, 180, self.screen.get_height() - 112 , self.player.hp, self.player.hp_max,(220, 220, 220))
@@ -789,8 +774,9 @@ class Game:
                    self.screen.blit(self.assets['noitaifull'],(self.screen.get_width() - 560,self.screen.get_height() - 740))
              #npc
             for npc1 in self.npc.copy():
-                npc1.update(self.tilemap, (0, 0))
+               
                 npc1.render(self.screen, offset=render_scroll)
+                npc1.update(self.tilemap, (0, 0))
 
 
              #player
@@ -849,9 +835,13 @@ class Game:
                         else:
                             self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
                     if event.key == pygame.K_LEFT:
+                        self.player.xuathienomap1=0
+                        self.player.timexuathien =500
                         self.movement[0] = True
                         
                     if event.key == pygame.K_RIGHT:
+                        self.player.xuathienomap1=0
+                        self.player.timexuathien =500
                         self.movement[1] = True
                         
                     if event.key == pygame.K_UP:

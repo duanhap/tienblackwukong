@@ -213,6 +213,8 @@ class BossAnhLiems(PhysicsEntity):
                     self.velocity[0] = max(self.velocity[0] - 0.1, 0)
                 else:
                     self.velocity[0] = min(self.velocity[0] + 0.1, 0)
+
+                    
                 if self.bidanh or self.attacking or self.blocking:                        
                                 if self.collision['right']:  
                                     self.flip = True   
@@ -534,7 +536,7 @@ class BossAnhLiems(PhysicsEntity):
                                     else:  
                                                                
                                             self.set_action('hurt')
-                                            self.hp-=0.05
+                                            self.hp-=0.1
                                             
                                        
                                         
@@ -554,7 +556,7 @@ class BossAnhLiems(PhysicsEntity):
                                         else:  
                                                                 
                                                 self.set_action('hurt')
-                                                self.hp-=0.05
+                                                self.hp-=0.1
                                                         
                                                    
         if self.action =='xuathien':
@@ -617,6 +619,8 @@ class BossAnhLiems(PhysicsEntity):
             
           
         super().render(surf, offset=offset) 
+        """
+        
         bar_width = 90
         bar_height = 5
         # Tính toán chiều rộng của thanh máu dựa trên HP
@@ -628,6 +632,6 @@ class BossAnhLiems(PhysicsEntity):
         if abs(disx) <200 and abs(disy)<200:
             pygame.draw.rect(surf, (128, 128, 128), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, bar_width, bar_height))
             pygame.draw.rect(surf, (255,0,0), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, fill_width, bar_height))   
-    
+    """
         
     
