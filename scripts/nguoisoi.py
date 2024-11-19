@@ -47,7 +47,7 @@ class NguoiSoi(PhysicsEntity):
                         
 
                         # Cập nhật danh sách các vị trí mục tiêu
-                        self.targets = [self.game.player.rect()] + [clone.rect() for clone in self.game.phanthans]
+                        self.targets = [self.game.player.rect()] + [clone.rect() for clone in self.game.phanthans] +[clone.rect() for clone in self.game.npc]
                         
                         # Tìm mục tiêu gần nhất
                         closest_target = min(self.targets, key=lambda t: math.hypot(t.centerx - self.rect().centerx, t.centery - self.rect().centery))
@@ -168,6 +168,16 @@ class NguoiSoi(PhysicsEntity):
                 for phanthan in self.game.phanthans:
                     if phanthan.animation.doneToDoSomething:
                             if self.recttuongtac().colliderect(phanthan.rectattack()):
+                                    if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
+                                        self.bidanh =True          
+                                    if self.hp <=0:
+                                        self.set_action('die')
+                                    else:
+                                        
+                                        self.set_action('hurt')   
+                for np in self.game.npc:
+                    if np.animation.doneToDoSomething:
+                            if self.recttuongtac().colliderect(np.rectattack()):
                                     if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
                                         self.bidanh =True          
                                     if self.hp <=0:

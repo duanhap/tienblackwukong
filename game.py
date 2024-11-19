@@ -191,9 +191,15 @@ class Game:
             #trubatgioi
             'trubatgioi/idle':Animation(load_images('entities/trubatgioi/idle',(320,260),(255,255,255)),img_dur=15),
             'trubatgioi/run':Animation(load_images('entities/trubatgioi/run',(320,260),(255,255,255)),img_dur=5),
-            #'trubatgioi/jump':Animation(load_images('entities/trubatgioi/jump',(95,125),(255,255,255))),
-            #'trubatgioi/hurt':Animation(load_images('entities/trubatgioi/hurt',(95,125),(255,255,255)),img_dur=8,loop=False),
-            'trubatgioi/attack':Animation(load_images('entities/trubatgioi/attack',(320,260),(255,255,255)),img_dur=5,loop=False),
+            'trubatgioi/jump':Animation(load_images('entities/trubatgioi/jump',(320,260),(255,255,255))),
+            'trubatgioi/hurt':Animation(load_images('entities/trubatgioi/hurt',(320,260),(255,255,255)),img_dur=10,loop=False),
+            'trubatgioi/die':Animation(load_images('entities/trubatgioi/die',(320,260),(255,255,255)),img_dur=8,loop=True),
+            'trubatgioi/attack':Animation(load_images('entities/trubatgioi/attack',(320,260),(255,255,255)),img_dur=4.5,loop=False),
+            'trubatgioi/attacklocxoay':Animation(load_images('entities/trubatgioi/attacklocxoay',(320,260),(255,255,255)),img_dur=5,loop=False),
+            'trubatgioi/healing':Animation(load_images('entities/trubatgioi/healing',(320,260),(255,255,255)),img_dur=8,loop=False),
+            'trubatgioi/attacklocxoaydai':Animation(load_images('entities/trubatgioi/attacklocxoaydai',(320,260),(255,255,255)),img_dur=8,loop=False),
+            'trubatgioi/healed':Animation(load_images('entities/trubatgioi/playerhealed',(320,260),(255,255,255)),img_dur=7,loop=True),
+
 
 
  
@@ -260,6 +266,7 @@ class Game:
 
         self.clip = VideoFileClip("data/demo.mp4")
         self.show_intro_video()  # Play the intro video
+
         self.original_volumes = {key: sound.get_volume() for key, sound in self.sfx.items()}
 
         
@@ -448,7 +455,36 @@ class Game:
         while True:
 
             # Kiểm tra và phát nhạc phù hợp với level hiện tại
-
+           # set nhạc cho mỗi map
+            if self.level == 0 and current_music != 'intro':
+                self.anhem=0
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('data/intro.mp3')
+                toggle_mute(self.game_state.sound_on, self.sfx, self.original_volumes)
+                pygame.mixer.music.play(-1) # Phát nhạc lặp lại
+                current_music = 'intro'
+            elif self.level==1 and current_music != 'khoidau':
+                self.anhem=4
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('data/khoidau.mp3')
+                toggle_mute(self.game_state.sound_on,self.sfx,self.original_volumes)
+                pygame.mixer.music.play(-1)
+                current_music = 'khoidau'
+            elif self.level==2 and current_music != 'lv2':
+                self.anhem=4
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('data/lv2.mp3')
+                toggle_mute(self.game_state.sound_on,self.sfx,self.original_volumes)
+                pygame.mixer.music.play(-1)
+                current_music = 'lv2'
+            elif self.level==3 and current_music != 'lv3':
+                self.anhem=4
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load('data/lv3.mp3')
+                toggle_mute(self.game_state.sound_on,self.sfx,self.original_volumes)
+                pygame.mixer.music.play(-1)
+                current_music = 'lv3'
+            """
             # set nhạc cho mỗi map
             if self.level == 0 and current_music != 'intro':
                 self.anhem=0
@@ -479,7 +515,7 @@ class Game:
                 pygame.mixer.music.set_volume(0.2)
                 pygame.mixer.music.play(-1)
                 current_music = 'lv3'
-            """
+            
              if self.level==2 and len(self.enemies) ==0:
                 self.clip = VideoFileClip("data/ending.mp4")
                 self.show_ending_video()
@@ -656,7 +692,7 @@ class Game:
                         draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
                     if enemy.type=="bossnguoida" and self.player.pos[0]<-2400 and self.player.pos[0]>-4800:          
                         draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
-                    if enemy.type=="nhilangthan" and self.player.pos[0]<3971 and self.player.pos[0]>3971:          
+                    if enemy.type=="nhilangthan" and self.player.pos[0]<7971 and self.player.pos[0]>3971:          
                         draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
 
             #phanthan

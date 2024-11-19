@@ -56,7 +56,7 @@ class CungThu(PhysicsEntity):
                         
 
                         # Cập nhật danh sách các vị trí mục tiêu
-                        self.targets = [self.game.player.rect()] + [clone.rect() for clone in self.game.phanthans]
+                        self.targets = [self.game.player.rect()] + [clone.rect() for clone in self.game.phanthans]+[clone.rect() for clone in self.game.npc]
                         
                         # Tìm mục tiêu gần nhất
                         closest_target = min(self.targets, key=lambda t: math.hypot(t.centerx - self.rect().centerx, t.centery - self.rect().centery))
@@ -268,13 +268,28 @@ class CungThu(PhysicsEntity):
                                         self.set_action('die')
                                     else:
                                         
+                                        self.set_action('hurt')       
+                for np in self.game.npc:
+                    if np.animation.doneToDoSomething:
+                            if self.recttuongtac().colliderect(np.rectattack()):
+                                    if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
+                                        self.bidanh =True          
+                                    if self.hp <=0:
+                                        self.set_action('die')
+                                    else:
+                                        
                                         self.set_action('hurt')               
                 if self.bidanh:                        
                         if self.collision['right']:     
                             self.pos[0]-=10
                         elif  self.collision['left']  :                           
+                            self.pos[0]+=10           
+                if self.bidanh:                        
+                        if self.collision['right']:     
+                            self.pos[0]-=10
+                        elif  self.collision['left']  :                           
                             self.pos[0]+=10    
-                     
+                
         if self.action == 'hurt' :
             
             if self.game.player.flip == False:

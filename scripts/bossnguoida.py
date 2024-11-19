@@ -84,7 +84,7 @@ class BossNguoiDa(PhysicsEntity):
                             
 
                             # Cập nhật danh sách các vị trí mục tiêu
-                            self.targets = [self.game.player.recttuongtac()] + [clone.recttuongtac() for clone in self.game.phanthans]
+                            self.targets = [self.game.player.recttuongtac()] + [clone.recttuongtac() for clone in self.game.phanthans]+[clone.rect() for clone in self.game.npc]
                             
                             # Tìm mục tiêu gần nhất
                             closest_target = min(self.targets, key=lambda t: math.hypot(t.centerx - self.rect().centerx, t.centery - self.rect().centery))
@@ -126,7 +126,7 @@ class BossNguoiDa(PhysicsEntity):
                                     
                                 
                             elif (abs(dis[0])<=1000 and abs(dis[0])>=50 and abs(dis[1])<1200):
-                                if self.hp>200:
+                                if self.hp>13:
                                      
                                     if (self.flip and dis[0] < 0):
                                             self.attacking = True
@@ -350,6 +350,20 @@ class BossNguoiDa(PhysicsEntity):
                         if phanthan.animation.doneToDoSomething:
                                 if self.recttuongtac().colliderect(phanthan.rectattack()):
                                                  
+                                        if not self.blocking:
+                                                       
+                                                if self.hp <=0:
+                                                    self.set_action('die')
+                                                else:
+                                                    self.hp-=0.02
+                                                    if self.action !='banlazethap':
+                                                        self.set_action('hurt')
+                                                    else:
+                                                        self.bidanh= True
+                    for np in self.game.npc:
+                        if np.animation.doneToDoSomething:
+                                if self.recttuongtac().colliderect(np.rectattack()):
+                                            
                                         if not self.blocking:
                                                        
                                                 if self.hp <=0:

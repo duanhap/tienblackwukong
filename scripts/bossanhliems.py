@@ -558,7 +558,22 @@ class BossAnhLiems(PhysicsEntity):
                                                 self.set_action('hurt')
                                                 self.hp-=0.1
                                                         
-                                                   
+                for np in self.game.npc:
+                    if np.animation.doneToDoSomething:
+                            if self.recttuongtac().colliderect(np.rectattack()):
+                                           
+                                    if random.randint(0,20) ==1 :
+                                        self.blocking == True
+                                        self.dangdungchieukhac= True
+                                        self.set_action('block')
+                                    elif not self.blocking:
+                                                
+                                        if self.hp <=0:
+                                            self.set_action('die')
+                                        else:  
+                                                                
+                                                self.set_action('hurt')
+                                                self.hp-=0.1                                  
         if self.action =='xuathien':
             #self.flip = True
             if self.animation.done:

@@ -38,7 +38,8 @@ class Player(PhysicsEntity):
         self.xuathien = False
         self.timexuathien =0
         self.xuathienomap1=1
-        
+        self.duochealing = False
+        self.imagehiuunng = self.game.assets['trubatgioi/healed'].copy()
 
     def update(self,tilemap,movement=(0,0)):
         super().update(tilemap, movement=movement)
@@ -285,8 +286,15 @@ class Player(PhysicsEntity):
     def skillphanthan(self):
         if not self.phanthaning and self.mana>2 :
             self.phanthaning = True
+    def render(self, surf, offset=(0, 0)):
+        super().render(surf, offset=offset)
+        if self.duochealing and self.action!='attack4':
             
-            
+            if self.flip:
+                surf.blit(pygame.transform.flip(self.imagehiuunng.img(), True, False), (self.rect().centerx +160 - self.imagehiuunng.img().get_width() - offset[0], self.rect().centery-130- offset[1]))
+            else:
+                surf.blit(self.imagehiuunng.img(), (self.rect().centerx-150  - offset[0], self.rect().centery-130 - offset[1]))       
+            self.imagehiuunng.update()
             
         
 

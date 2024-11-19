@@ -49,7 +49,7 @@ class NguoiSoiDo(PhysicsEntity):
                         
 
                         # Cập nhật danh sách các vị trí mục tiêu
-                        self.targets = [self.game.player.rect()] + [clone.rect() for clone in self.game.phanthans]
+                        self.targets = [self.game.player.rect()] + [clone.rect() for clone in self.game.phanthans] +[clone.rect() for clone in self.game.npc]
                         
                         # Tìm mục tiêu gần nhất
                         closest_target = min(self.targets, key=lambda t: math.hypot(t.centerx - self.rect().centerx, t.centery - self.rect().centery))
@@ -137,8 +137,7 @@ class NguoiSoiDo(PhysicsEntity):
                 if self.game.player.attacking:
                             if self.game.player.animation.doneToDoSomething:
                                 if self.recttuongtac().colliderect(self.game.player.rectattack()):
-                                        if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
-                                            self.bidanh =True          
+                                               
                                         if self.hp <=0:
                                             self.set_action('die')
                                         else:
@@ -154,13 +153,23 @@ class NguoiSoiDo(PhysicsEntity):
                                         
                                         self.set_action('hurt') 
                                         self.hp-=0.05 
-
+                for np in self.game.npc:
+                    if np.animation.doneToDoSomething:
+                            if self.recttuongtac().colliderect(np.rectattack()):
+                                           
+                                    if self.hp <=0:
+                                        self.set_action('die')
+                                    else:
+                                        
+                                        self.set_action('hurt')  
+                                        self.hp-=0.05  
                 if self.bidanh or self.attacking:                        
                         if self.collision['right']:     
                             self.pos[0]-=10
                         elif  self.collision['left']  :                           
                             self.pos[0]+=10 
         if self.action == 'hurt' :
+            self.bidanh = True
             self.can_move = False
             if self.game.player.flip == False:
                 self.pos[0] +=random.randint(1,5)
@@ -192,7 +201,8 @@ class NguoiSoiDo(PhysicsEntity):
                         self.set_action('attackgan1')
 
                 self.bidanh = False
-                self.can_move = True     
+                self.can_move = True 
+                    
         if self.action =='die':
                 if not self.bidanh: # ko bi danh trung , kiểu đnag bị đáng lại bị đánh
                     self.bidanh =True  
@@ -201,7 +211,7 @@ class NguoiSoiDo(PhysicsEntity):
                 self.can_move = False
                 
                 if self.animation.done:
-                    self.game.player.binhhp+=1
+                   
                     self.dead = True
                     for i in range(30):
                         angle = random.random() * math.pi * 2
