@@ -499,6 +499,7 @@ class BossNguoiDa(PhysicsEntity):
           
         super().render(surf, offset=offset)
         
+        """
         
         bar_width = 90
         bar_height = 5
@@ -508,9 +509,9 @@ class BossNguoiDa(PhysicsEntity):
         disy = self.rect().centery -self.game.player.rect().centery
         
 
-        if abs(disx) <2000 and abs(disy)<2000:
-            pygame.draw.rect(surf, (128, 128, 128), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, bar_width, bar_height))
-            pygame.draw.rect(surf, (255,0,0), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, fill_width, bar_height))
-        
+        #if abs(disx) <2000 and abs(disy)<2000:
+        #    pygame.draw.rect(surf, (128, 128, 128), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, bar_width, bar_height))
+        #    pygame.draw.rect(surf, (255,0,0), (self.recttuongtac().x-offset[0]+25,self.recttuongtac().y-offset[1]-50, fill_width, bar_height))
+        """
         
     

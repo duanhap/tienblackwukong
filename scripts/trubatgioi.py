@@ -95,7 +95,7 @@ class TruBatGioi(PhysicsEntity):
                 if not self.walking:
                     chieu = random.randint(0,3)
                     if(abs(dis_main[0]<=300)):
-                        if chieu ==3 and self.xuathienkhunghinhmap2 >700:
+                        if chieu ==3 and self.xuathienkhunghinhmap2 >700 and self.air_time==0:
                             if (self.flip and dis_main[0] < 0) :
                                         self.attacking = True                               
                                         self.set_action('healing')                               
@@ -177,7 +177,7 @@ class TruBatGioi(PhysicsEntity):
                                         self.velocity[0]=max(3,dis_main[0]/200*3) 
                                         self.velocity[1]=-2  
 
-            elif random.random() < 0.13:
+            elif random.random() < 0.08:
                 self.walking = random.randint(30, 120)
             
             super().update(tilemap, movement=movement)

@@ -106,4 +106,68 @@ def toggle_mute(muted,listmusic,original_volumes):
             sound.set_volume(original_volumes[key])  # Khôi phục âm lượng ban đầu
 
 
+
+
+
+
+
+# Hàm xử lý file điểm số
+def read_scores(file_path):
+    try:
+        with open(file_path, "r") as file:
+            scores = [line.strip().split(",") for line in file.readlines()]
+            return [(name, int(time)) for name, time in scores]
+    except FileNotFoundError:
+        return []
+
+def update_scores(file_path, new_name, new_time):
+    scores = read_scores(file_path)
+    scores.append((new_name, new_time))
+    scores = sorted(scores, key=lambda x: x[1])[:10]  # Giữ top 10
+    with open(file_path, "w") as file:
+        for name, time in scores:
+            file.write(f"{name},{time}\n")
+
+def is_top_10(file_path, new_time):
+    scores = read_scores(file_path)
+    if len(scores) < 10:
+        return True
+    return new_time < max(scores, key=lambda x: x[1])[1]
+
+# Hàm nhập tên trong Pygame
+def get_player_name(screen, font):
+    input_box = pygame.Rect(300, 250, 200, 50)
+    color_inactive = pygame.Color('lightskyblue3')
+    color_active = pygame.Color('dodgerblue2')
+    color = color_inactive
+    active = False
+    text = ''
+    done = False
+
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Nếu nhấp vào hộp nhập, kích hoạt chế độ nhập
+                active = input_box.collidepoint(event.pos)
+                color = color_active if active else color_inactive
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        done = True
+                    elif event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]
+                    else:
+                        text += event.unicode
+
+        screen.fill((0, 0, 0))  # Xóa màn hình
+        txt_surface = font.render(text, True, color)
+        width = max(200, txt_surface.get_width() + 10)
+        input_box.w = width
+        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+        pygame.draw.rect(screen, color, input_box, 2)
+        pygame.display.flip()
     
+    return text

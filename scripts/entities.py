@@ -84,8 +84,6 @@ class PhysicsEntity:
         self.frame_movement =(0,0) #dichuyen len xuong trai phai
         self.can_move = True
        
-      
-
     #rect attack
     def rectattack(self,offset=(0,0)):
         if not self.flip:
@@ -93,29 +91,22 @@ class PhysicsEntity:
         else:
             return pygame.Rect(self.rect().x -self.rectAttack[4] -self.rectAttack[0]-10-offset[0], self.pos[1]+self.rectAttack[1]-offset[1],self.rectAttack[2],self.rectAttack[3])  
 
-
     #rect tuong tac
     def recttuongtac(self,offset=(0,0)):
         
         return pygame.Rect(self.pos[0]+self.rectTuongTacEdit[0]-offset[0], self.pos[1]+self.rectTuongTacEdit[1]-offset[1],self.rectTuongTacEdit[2],self.rectTuongTacEdit[3])  
     
-
     #tao collison cho player xử lý va chạm 
     def rect(self,offset=(0,0)):
         
         return pygame.Rect(self.pos[0]+self.rectedit[0]-offset[0], self.pos[1]+self.rectedit[1]-offset[1],self.rectedit[2],self.rectedit[3])  
         
-            
-
     #tao trang thai neu dang ở trong trạng thái nào mà lại thêm chuyển đôg mơi giống  thì không chuyển
     def set_action(self,action):
         if action != self.action:
             self.action = action
             self.animation = self.game.assets[self.type +'/'+ self.action].copy() #'player/idle'
             
-
-
-
     def update(self,tilemap,movement=(0,0)):
         self.collision = {'up':False,'down':False,'right':False,'left':False}
 
@@ -207,10 +198,9 @@ class PhysicsEntity:
 
         self.animation.update()
 
-
     # lấy ảnh
     def render(self,surf,offset=(0,0)):# off set đẻ nhận vật luôn ở vị trí trung tâm camera
-        #pygame.draw.rect(surf, (0, 0, 255), self.rectattack(offset), 2)  # Viền đỏ
+       # pygame.draw.rect(surf, (0, 0, 255), self.rectattack(offset), 2)  # Viền đỏ
         #pygame.draw.rect(surf, (0, 255, 0), self.recttuongtac(offset), 2)  # Viền xanh lá
         #pygame.draw.rect(surf, (255, 0, 0), self.rect(offset), 2)  # Viền đỏ
         surf.blit(pygame.transform.flip(self.animation.img(),self.flip,False),(self.pos[0]-offset[0]+self.anim_offset[0],self.pos[1]-offset[1]+self.anim_offset[1]))

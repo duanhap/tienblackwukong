@@ -27,8 +27,6 @@ import pygame
 import pygame
 from moviepy.editor import VideoFileClip
 
-
-
 #make your game its own object
 class Game:
     def __init__(self):
@@ -40,6 +38,8 @@ class Game:
         # đặt tên ứng dụng
         pygame.display.set_caption('BLACK MYTH WUKONG')
         self.screen = pygame.display.set_mode((1200,800))
+        icon =pygame.image.load('data/images/icon.jpg')
+        pygame.display.set_icon(icon)
         #tốc đọ khung hình
         self.clock = pygame.time.Clock() 
 
@@ -77,14 +77,6 @@ class Game:
             'groundforest':load_images('tiles/groundforest',(50,50),(0,0,0)),
             'caydamlay':load_images('tiles/caydamlay',None,(255,255,255),2),
             
-
-
-
-
-
-
-
-
 
             # nhan vật và enemy
             'enemy/idle': Animation(load_images('entities/enemy/idle',(75, 100),(0,0,0)), img_dur=6),
@@ -150,7 +142,6 @@ class Game:
                                                 get_frames('\\images\\entities\\nguoisoido\\attackgan2',2)+
                                                 get_frames('\\images\\entities\\nguoisoido\\attackgan3',2), img_dur=6.9,loop=False),
             
-
             #boss ngươi da
             'bossnguoida/idle': Animation(load_images('entities/bossnguoida/idle',(1100,800),(255,255,255)),img_dur=10,loop=True),
             'bossnguoida/attackchocxa': Animation(load_images('entities/bossnguoida/attack',(1100,800),(255,255,255)),img_dur=7,loop=False),
@@ -163,9 +154,6 @@ class Game:
                                                 load_images('entities/bossnguoida/banlazecao',(1100,800),(255,255,255))+
                                                 load_images('entities/bossnguoida/banlazecao',(1100,800),(255,255,255)),img_dur=5,loop=False),
             'bossnguoida/banlazethap': Animation(load_images('entities/bossnguoida/banlazethap',(2000,800),(255,255,255)),img_dur=6.6,loop=False),
-
-
-
 
             #nhi lang than
             'nhilangthan/idle':Animation(load_images('entities/nhilangthan/idle',(172,198),(255,255,255)),img_dur=15),
@@ -187,7 +175,6 @@ class Game:
             'nhilangthan/combogan':Animation(load_images('entities/nhilangthan/attackcombongan',(420,390),(255,255,255)),img_dur=7,loop = False),
             'nhilangthan/tialazegan':Animation(load_images('entities/nhilangthan/tialazegan',(1080,360),(255,255,255)),img_dur=4,loop = False),
 
-
             #trubatgioi
             'trubatgioi/idle':Animation(load_images('entities/trubatgioi/idle',(320,260),(255,255,255)),img_dur=15),
             'trubatgioi/run':Animation(load_images('entities/trubatgioi/run',(320,260),(255,255,255)),img_dur=5),
@@ -199,10 +186,6 @@ class Game:
             'trubatgioi/healing':Animation(load_images('entities/trubatgioi/healing',(320,260),(255,255,255)),img_dur=8,loop=False),
             'trubatgioi/attacklocxoaydai':Animation(load_images('entities/trubatgioi/attacklocxoaydai',(320,260),(255,255,255)),img_dur=8,loop=False),
             'trubatgioi/healed':Animation(load_images('entities/trubatgioi/playerhealed',(320,260),(255,255,255)),img_dur=7,loop=True),
-
-
-
- 
 
             #npc
             'npcsoi/idle': Animation2(get_frames('\\images\\entities\\npcsoi\\idle',0.3), img_dur=8,loop=True),
@@ -365,7 +348,6 @@ class Game:
                         pygame.mixer.music.stop()  # Skip the video by pressing space
                         return
                     
-
     def load_level(self, map_id):
 
         self.sfx['chuyencanh'].play()
@@ -425,11 +407,6 @@ class Game:
         self.screenshake=0 #rung lắc
         self.transition =-30 
 
-
-    # Hàm vẽ thanh máu
-    
-
-
     def add_player(self):
         if self.player.flip:
             x = self.player.pos[0]-  random.randint(75,150)# Tạo khoảng cách giữa các nhân vật
@@ -453,6 +430,103 @@ class Game:
         current_music = None
        
         while True:
+            for event in pygame.event.get():  # get the input,click , keosv..vv
+                if event.type == pygame.QUIT:  # click dau X để thoát
+                    pygame.quit()
+
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            self.game_state.paused = not self.game_state.paused
+                            if self.game_state.paused:
+                                self.menu_bg = self.screen.copy()
+                    if event.key == pygame.K_f:
+                        self.game_state.fullscreen = not self.game_state.fullscreen
+                        if self.game_state.fullscreen:
+                            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Chuyển sang fullscreen
+                        else:
+                            self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
+                    if event.key == pygame.K_LEFT:
+                        self.player.xuathienomap1 = 0
+                        self.player.timexuathien = 500
+                        self.movement[0] = True
+
+                    if event.key == pygame.K_RIGHT:
+                        self.player.xuathienomap1 = 0
+                        self.player.timexuathien = 500
+                        self.movement[1] = True
+
+                    if event.key == pygame.K_UP:
+                        self.player.jump()
+                        for i in range(20):
+                            angle = random.random() * math.pi * 2
+                            speed = random.random() * 2 + 1
+                            pvelocity = [math.cos(angle) * speed, math.sin(angle) * speed]
+                            self.particles.append(
+                                Particle(self, 'particlewukong', self.player.rect().center, velocity=pvelocity,
+                                         frame=random.randint(0, 7)))
+                    if event.key == pygame.K_DOWN:
+                        self.player.blocking = True
+                    if event.key == pygame.K_c:
+                        self.player.tichnoitai = True
+                        self.player.attack()
+
+                    if event.key == pygame.K_x:
+                        self.player.skillphanthan()
+                    if event.key == pygame.K_z:
+                        self.player.dash()
+                    if event.key == pygame.K_m:
+                        self.enemies.clear()
+
+                    if event.key == pygame.K_v and self.player.binhhp > 0:
+                        self.player.binhhp -= 1
+                        self.player.stamina = 10
+                        if self.player.hp > 7:
+                            self.player.hp = 10
+                        else:
+                            self.player.hp += 3
+
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT:
+                        self.movement[0] = False
+                    if event.key == pygame.K_RIGHT:
+                        self.movement[1] = False
+                    # if event.key == pygame.K_q:
+                    # self.phanthan = False
+                    if event.key == pygame.K_DOWN:
+                        self.player.blocking = False
+                    if event.key == pygame.K_c:
+                        self.player.tichnoitai = False
+                        self.player.dieukiendanhnoitai = 0
+                if self.game_state.paused:
+                    selected = self.menu.handle_event(event)
+                    if selected == "Sound":
+                        self.game_state.sound_on = not self.game_state.sound_on
+                        toggle_mute(self.game_state.sound_on, self.sfx,
+                                    self.original_volumes)  # Dừng nhạc nếu tắt âm thanh
+                    elif selected == "Fullscreen":
+                        self.game_state.fullscreen = not self.game_state.fullscreen
+                        if self.game_state.fullscreen:
+                            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Chuyển sang fullscreen
+                        else:
+                            self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
+                    elif selected == "Resume":
+                        self.game_state.paused = False
+                    elif selected == "Quit":
+                        self.game_state.running = False
+                        pygame.quit()
+
+            if self.game_state.paused:
+                # Vẽ màn hình game trước khi dừng
+                screen_width, screen_height = self.screen.get_size()
+                self.menu_bg = pygame.transform.scale(self.menu_bg, (screen_width, screen_height))
+                if self.menu_bg:
+                    self.screen.blit(self.menu_bg, (0, 0))
+                # Vẽ menu
+                self.menu.draw(self.screen)
+                pygame.display.update()
+                continue
 
             # Kiểm tra và phát nhạc phù hợp với level hiện tại
            # set nhạc cho mỗi map
@@ -483,48 +557,7 @@ class Game:
                 pygame.mixer.music.load('data/lv3.mp3')
                 toggle_mute(self.game_state.sound_on,self.sfx,self.original_volumes)
                 pygame.mixer.music.play(-1)
-                current_music = 'lv3'
-            """
-            # set nhạc cho mỗi map
-            if self.level == 0 and current_music != 'intro':
-                self.anhem=0
-
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load('data/intro.mp3')
-                pygame.mixer.music.set_volume(0.5)
-                pygame.mixer.music.play(-1) # Phát nhạc lặp lại
-                current_music = 'intro'
-            elif self.level==1 and current_music != 'khoidau':
-                self.anhem=4
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load('data/khoidau.mp3')
-                pygame.mixer.music.set_volume(0.5)
-                pygame.mixer.music.play(-1)
-                current_music = 'khoidau'
-            elif self.level==2 and current_music != 'lv2':
-                self.anhem=4
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load('data/lv2.mp3')
-                pygame.mixer.music.set_volume(0.2)
-                pygame.mixer.music.play(-1)
-                current_music = 'lv2'
-            elif self.level==3 and current_music != 'lv3':
-                self.anhem=4
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load('data/lv3.mp3')
-                pygame.mixer.music.set_volume(0.2)
-                pygame.mixer.music.play(-1)
-                current_music = 'lv3'
-            
-             if self.level==2 and len(self.enemies) ==0:
-                self.clip = VideoFileClip("data/ending.mp4")
-                self.show_ending_video()
-                #restart game 
-                os.execv(sys.executable, ['game'] + sys.argv)
-            """
-           
-                
-           
+                current_music = 'lv3'         
             #camera theo player
             if self.capnhatvitriplayer:
                 self.scroll[0]+=(self.player.rect().centerx-self.screen.get_width()/2-self.scroll[0])/50
@@ -671,12 +704,20 @@ class Game:
                 self.screen.blit(text_surface, (self.screen.get_width() - 200, 50))
                 self.screen.blit(text_surfaceX, (self.screen.get_width() - 150, 50))
                 self.screen.blit(self.assets['amount'],(self.screen.get_width() - 140,20))  
-                        
-            #ênmy
             for enemy in self.enemies.copy():
+                if enemy.type == 'bosschim' and self.player.pos[0] > 2800 and self.player.pos[
+                    0] < 5300 and enemy.mainBoss == True:
+                    draw_health_bar(self.screen, self.screen.get_width() // 2 - 250, 50, enemy.hp, enemy.hp_max,
+                                    (255, 0, 0), 500, 20)
+                if enemy.type == "bossnguoida" and self.player.pos[0] < 8888 and self.player.pos[0] > 6471:
+                    draw_health_bar(self.screen, self.screen.get_width() // 2 - 250, 50, enemy.hp, enemy.hp_max,
+                                    (255, 0, 0), 500, 20)
+                if enemy.type == "nhilangthan" and self.player.pos[0] < 7971 and self.player.pos[0] > 3971:
+                    draw_health_bar(self.screen, self.screen.get_width() // 2 - 250, 50, enemy.hp, enemy.hp_max,
+                                    (255, 0, 0), 500, 20)
+
                 kill = enemy.update(self.tilemap, (0, 0))
-                
-                enemy.render(self.screen, offset=render_scroll)
+
                 if kill:
                     if enemy.type=='bossChim' and enemy.mainBoss==True:
                         self.enemies.remove(enemy)
@@ -686,27 +727,18 @@ class Game:
                                 enemy2.set_action='die'
                                 
                     self.enemies.remove(enemy)
-                else:
-                    if enemy.type=='bosschim'and self.player.pos[0]>2800 and self.player.pos[0]<5300  and enemy.mainBoss==True:
-                       
-                        draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
-                    if enemy.type=="bossnguoida" and self.player.pos[0]<-2400 and self.player.pos[0]>-4800:          
-                        draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
-                    if enemy.type=="nhilangthan" and self.player.pos[0]<7971 and self.player.pos[0]>3971:          
-                        draw_health_bar(self.screen,self.screen.get_width() // 2 - 250,  50,enemy.hp, enemy.hp_max,(255,0,0),500,20)
-
-            #phanthan
+                enemy.render(self.screen, offset=render_scroll)
+            #hiện enemy
+          
+            
+            #Phân thân
             for phanthan in self.phanthans.copy():
                 kill = phanthan.update(self.tilemap, (0, 0))
                 phanthan.render(self.screen, offset=render_scroll)
                 if kill:
                          self.phanthans.remove(phanthan)
            
-                
-                    
-               
-
-            #la roi
+            #hiệu ứng lá rơi
             for rect in self.leaf_spawners:
                 if random.random() * 6500000 < rect.width * rect.height: # NHÂN SỐ CÀNG TO TỶ LỆ RA CẰNG THẤP
                     pos = (rect.x + random.random() * rect.width, rect.y + random.random() * rect.height)
@@ -854,99 +886,8 @@ class Game:
 
 
            
-            #print(self.tilemap.physics_rects_around(self.player.pos))
-            for event in pygame.event.get(): #get the input,click , keosv..vv
-                if event.type == pygame.QUIT: #click dau X để thoát
-                    pygame.quit()
+           
 
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            self.game_state.paused = not self.game_state.paused
-                    if event.key == pygame.K_f:
-                        self.game_state.fullscreen = not self.game_state.fullscreen
-                        if self.game_state.fullscreen:
-                            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Chuyển sang fullscreen
-                        else:
-                            self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
-                    if event.key == pygame.K_LEFT:
-                        self.player.xuathienomap1=0
-                        self.player.timexuathien =500
-                        self.movement[0] = True
-                        
-                    if event.key == pygame.K_RIGHT:
-                        self.player.xuathienomap1=0
-                        self.player.timexuathien =500
-                        self.movement[1] = True
-                        
-                    if event.key == pygame.K_UP:
-                        self.player.jump()
-                        for i in range(20):
-                            angle = random.random() * math.pi * 2
-                            speed = random.random() * 2 + 1
-                            pvelocity = [math.cos(angle) * speed, math.sin(angle) * speed]
-                            self.particles.append(Particle(self, 'particlewukong', self.player.rect().center, velocity=pvelocity, frame=random.randint(0, 7)))                 
-                    if event.key == pygame.K_DOWN:            
-                        self.player.blocking = True                  
-                    if event.key == pygame.K_c:
-                        
-                        self.player.tichnoitai=True
-                        self.player.attack()
-                        
-                               
-                    if event.key == pygame.K_x:         
-                        self.player.skillphanthan()   
-                    if event.key == pygame.K_z:
-                        self.player.dash()
-                    if event.key == pygame.K_m:
-                        self.enemies.clear()
-                    
-                       
-                    if event.key == pygame.K_v and self.player.binhhp>0:
-                        self.player.binhhp-=1
-                        self.player.stamina=10
-                        if self.player.hp>7:
-                            self.player.hp=10
-                        else:
-                            self.player.hp+=3
-                        
-                       
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT:
-                        self.movement[0] = False
-                    if event.key == pygame.K_RIGHT:
-                        self.movement[1] = False
-                    #if event.key == pygame.K_q:
-                        #self.phanthan = False
-                    if event.key == pygame.K_DOWN:
-                        self.player.blocking = False
-                    if event.key == pygame.K_c:
-                        self.player.tichnoitai = False
-                        self.player.dieukiendanhnoitai=0
-                if self.game_state.paused:
-                    selected = self.menu.handle_event(event)
-                    if selected == "Sound":
-                        self.game_state.sound_on = not self.game_state.sound_on
-                        toggle_mute(self.game_state.sound_on,self.sfx,self.original_volumes)  # Dừng nhạc nếu tắt âm thanh
-                    elif selected == "Fullscreen":
-                        self.game_state.fullscreen = not self.game_state.fullscreen
-                        if self.game_state.fullscreen:
-                            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # Chuyển sang fullscreen
-                        else:
-                            self.screen = pygame.display.set_mode((1200, 800))  # Trở lại cửa sổ ban đầu
-                    elif selected == "Resume":
-                        self.game_state.paused = False
-                    elif selected == "Quit":
-                        self.game_state.running = False
-                        pygame.quit()
-                
-
-            if self.game_state.paused:
-                self.menu.draw(self.screen)
-                pygame.display.update()
-                continue
-            
                         
             # hiệu ứng chuyển map
             if self.transition:

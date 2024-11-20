@@ -29,12 +29,8 @@ class Editor:
             'ice':load_images('tiles/ice',None,(0,0,0),2),
             'spawners': load_images('tiles/spawners',(50,50),(0,0,0)),
             'tree':load_images('tiles/tree',None,(255,255,255),5),
-
-            #dan lm
             'groundforest':load_images('tiles/groundforest',(50,50),(0,0,0)),
             'caydamlay':load_images('tiles/caydamlay',None,(255,255,255),2),
-            
-           
         }
 
         #dichuyen
@@ -181,5 +177,5 @@ class Editor:
                     if event.key == pygame.K_LSHIFT:
                         self.shift = False
             pygame.display.update()
-            self.clock.tick(60) # duy trì tốc độ 60FPS
+            self.clock.tick(100) # duy trì tốc độ 60FPS
 Editor().run()

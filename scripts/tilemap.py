@@ -70,10 +70,7 @@ class Tilemap:
             if loc in self.tilemap:
                 if self.tilemap[loc]['type'] in PHYSICS_TILES:
                     return self.tilemap[loc]
-            
-
-            
-             
+         
     #save và load map  và tự động điền map       
     def save(self, path):
         f = open(path, 'w')
@@ -101,8 +98,6 @@ class Tilemap:
             neighbors = tuple(sorted(neighbors))
             if (tile['type'] in AUTOTILE_TYPES) and (neighbors in AUTOTILE_MAP):
                 tile['variant'] = AUTOTILE_MAP[neighbors]
-
-
 
 #collision
     # xét xung quang 1 vị trí xem có tilemap nào ko lưu vào tiles
