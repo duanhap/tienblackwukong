@@ -13,6 +13,7 @@ from scripts.cungthu import CungThu
 from scripts.bosschim import BossChim
 from scripts.nguoisoi import NguoiSoi
 from scripts.nguoisoido import NguoiSoiDo
+from scripts.nguoisoitrang import NguoiSoiTrang
 from scripts.bossnguoida import BossNguoiDa
 from scripts.bossanhliems import BossAnhLiems
 from scripts.trubatgioi import TruBatGioi
@@ -149,7 +150,7 @@ class Game:
             'nguoisoitrang/run': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\run',2), img_dur=5,loop=True),
             'nguoisoitrang/die': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\dead',2), img_dur=20,loop=False),
             'nguoisoitrang/hurt': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\hurt',2 ), img_dur=10,loop=False),
-            'nguoisoitrang/attack': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\attack',2), img_dur=6.9,loop=False),
+            'nguoisoitrang/attack': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\attack',2), img_dur=5,loop=False),
             #boss ngươi da
             'bossnguoida/idle': Animation(load_images('entities/bossnguoida/idle',(1100,800),(255,255,255)),img_dur=10,loop=True),
             'bossnguoida/attackchocxa': Animation(load_images('entities/bossnguoida/attack',(1100,800),(255,255,255)),img_dur=7,loop=False),
@@ -387,7 +388,7 @@ class Game:
         for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1),('spawners', 2),
                                              ('spawners', 3),('spawners', 4),('spawners', 5),
                                              ('spawners', 6),('spawners', 7),('spawners',8),
-                                             ('spawners', 9)]):
+                                             ('spawners', 9),('spawners', 10)]):
             if spawner['variant'] == 0:
                 self.player.pos = spawner['pos']
                 self.player.air_time =0
@@ -409,7 +410,8 @@ class Game:
                 self.enemies.append(BossAnhLiems(self, spawner['pos'], (75, 100)))
             if spawner['variant'] == 9:
                 self.npc.append(TruBatGioi(self, spawner['pos'], (75, 100)))
-            
+            if spawner['variant'] == 10:
+                self.enemies.append(NguoiSoiTrang(self, spawner['pos'], (75, 100)))
         self.projectiles = [] #đạn bắn
         self.particles = []
         self.sparks = []   #hiệu ứng

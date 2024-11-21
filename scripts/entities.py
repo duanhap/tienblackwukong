@@ -73,6 +73,10 @@ class PhysicsEntity:
             self.rectedit=(140,123,35,50)
             self.rectTuongTacEdit=(132,100,45,70)
             self.rectAttack=(20,70,100,100,55)
+        elif self.type == "nguoisoitrang":
+            self.rectedit=(130,204,40,50)#  x,y,chieudai,chieu cao , 2 giá trị đằng sau này max chỉ đc 50 không là lỗi
+            self.rectTuongTacEdit=(75,140,140,110) # khung tuong tac tương tự
+            self.rectAttack=(15,80,120,130,100)
              
 
         self.collision = {'up':False,'down':False,'right':False,'left':False}
