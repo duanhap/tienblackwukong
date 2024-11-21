@@ -6,7 +6,7 @@ import sys
 from scripts.menu import Menu
 from scripts.settings import GameState
 from scripts.settings import *
-from scripts.utils import load_image,load_images,Animation,draw_health_bar,draw_bar_hp,toggle_mute
+from scripts.utils import load_image,load_images,Animation,draw_health_bar,draw_bar_hp,toggle_mute,is_top_10,get_player_name,update_scores,read_scores
 from scripts.animation2 import get_frame,get_frames,Animation2
 from scripts.Player import Player
 from scripts.cungthu import CungThu
@@ -42,7 +42,7 @@ class Game:
         pygame.display.set_icon(icon)
         #tốc đọ khung hình
         self.clock = pygame.time.Clock() 
-
+        self.landau = True
         #dichuyen
         self.movement =[False,False]
        
@@ -62,6 +62,8 @@ class Game:
             'noitaichuafull':load_image('chuafull.png',(900,800),(255,255,255)),
             'player':load_image('entities/player.png',(95,125),(255,255,255)),
             'background':load_image('background.png',(1200,800)),
+            'tongket':load_image('tongket.png',(1200,800)),
+            'chucmung':load_image('chucmung.png',(1200,800)),
             'intro':load_image('intro.png',(1200,800)),
             'introword':load_image('introword3.png',(1200,800),(0,0,0)),
             'tree':load_images('tiles/tree',None,(255,255,255),5),
@@ -141,7 +143,13 @@ class Game:
             'nguoisoido/attackgan1': Animation2(get_frames('\\images\\entities\\nguoisoido\\attackgan1',2)+
                                                 get_frames('\\images\\entities\\nguoisoido\\attackgan2',2)+
                                                 get_frames('\\images\\entities\\nguoisoido\\attackgan3',2), img_dur=6.9,loop=False),
-            
+
+
+            'nguoisoitrang/idle': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\idle',2), img_dur=5,loop=True),
+            'nguoisoitrang/run': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\run',2), img_dur=5,loop=True),
+            'nguoisoitrang/die': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\dead',2), img_dur=20,loop=False),
+            'nguoisoitrang/hurt': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\hurt',2 ), img_dur=10,loop=False),
+            'nguoisoitrang/attack': Animation2(get_frames('\\images\\entities\\nguoisoitrang\\attack',2), img_dur=6.9,loop=False),
             #boss ngươi da
             'bossnguoida/idle': Animation(load_images('entities/bossnguoida/idle',(1100,800),(255,255,255)),img_dur=10,loop=True),
             'bossnguoida/attackchocxa': Animation(load_images('entities/bossnguoida/attack',(1100,800),(255,255,255)),img_dur=7,loop=False),
@@ -269,6 +277,10 @@ class Game:
 
         #soluongphanthan
         self.anhem=4
+
+
+        #################
+        self.start_ticks = pygame.time.get_ticks()
     
     def show_intro_video(self):
         # Play the intro video
@@ -424,12 +436,64 @@ class Game:
                 self.sparks.append(Spark(new_player.rect().center, angle, 2 + random.random()))
                 self.particles.append(Particle(self, 'particle', new_player.rect().center, velocity=[math.cos(angle + math.pi) * speed , math.sin(angle + math.pi) * speed ], frame=random.randint(0, 7)))
 
-    
+    def show_time_played(self):
+        #self.screen.fill((0, 0, 0))
+        
+        if self.level!=0:
+            self.elapsed_time = (pygame.time.get_ticks() - self.start_ticks) // 1000
+            time_surface = font.render(f"Time: {self.elapsed_time} s", True, (0, 0, 0))
+            self.screen.blit(time_surface, (10, 10))
+       
+    def show_table_player(self):
+        
+        font = pygame.font.Font(None, 50)
+        play_time = self.elapsed_time
+        SCORE_FILE ='data/scores.txt'
+        if is_top_10(SCORE_FILE, play_time):
+            player_name = get_player_name(self,self.screen, font)
+            update_scores(SCORE_FILE, player_name, play_time)
+        # Hiển thị danh sách top 10 (luôn luôn hiện)
+        if self.game_state.fullscreen:
+            font = pygame.font.Font(None, 60)
+        else:
+            font = pygame.font.Font(None, 40)
+        if self.game_state.fullscreen:
+                    info = pygame.display.Info()
+                    self.assets['tongket'] =load_image('tongket.png',(info.current_w,info.current_h))
+        else:
+            self.assets['tongket'] =load_image('tongket.png',(1200,800))
+                
+        self.screen.blit(self.assets['tongket'],(0,0))
+        scores = read_scores(SCORE_FILE)
+        y_offset = self.screen.get_height()//4+30
+
+        
+
+        # Hiển thị từng người chơi trong top 10
+        top=1
+        for name, time in scores:
+            score_text = font.render(f"Top {top}: {name} - {time} giây", True, (255, 255, 0))
+            self.screen.blit(score_text, (150, y_offset))
+            y_offset += self.screen.get_height()//18
+            top+=1
+
+        # Cập nhật màn hình để người chơi nhìn thấy danh sách
+        pygame.display.flip()
+
+        # Chờ vài giây trước khi thoát
+        pygame.time.wait(10000)
+        self.level=0
+        self.landau = True
+        self.load_level(self.level)  
+
     def run(self):
        
         current_music = None
+        
+            
        
         while True:
+            
             for event in pygame.event.get():  # get the input,click , keosv..vv
                 if event.type == pygame.QUIT:  # click dau X để thoát
                     pygame.quit()
@@ -523,6 +587,8 @@ class Game:
                 self.menu_bg = pygame.transform.scale(self.menu_bg, (screen_width, screen_height))
                 if self.menu_bg:
                     self.screen.blit(self.menu_bg, (0, 0))
+                
+                self.start_ticks = pygame.time.get_ticks()-self.elapsed_time*1000
                 # Vẽ menu
                 self.menu.draw(self.screen)
                 pygame.display.update()
@@ -557,7 +623,13 @@ class Game:
                 pygame.mixer.music.load('data/lv3.mp3')
                 toggle_mute(self.game_state.sound_on,self.sfx,self.original_volumes)
                 pygame.mixer.music.play(-1)
-                current_music = 'lv3'         
+                current_music = 'lv3'  
+            if self.level==3 and len(self.enemies) ==0:
+                self.clip = VideoFileClip("data/ending.mp4")
+                self.show_ending_video()
+                #restart game 
+                #os.execv(sys.executable, ['game'] + sys.argv)   
+                self.show_table_player()    
             #camera theo player
             if self.capnhatvitriplayer:
                 self.scroll[0]+=(self.player.rect().centerx-self.screen.get_width()/2-self.scroll[0])/50
@@ -566,8 +638,11 @@ class Game:
 
         
             # set BG cho mỗi map
+            if self.level!=0 and self.landau:
+                self.start_ticks = pygame.time.get_ticks()
+                self.landau=False
             if self.level ==0 :
-                
+                self.start_ticks=0
                 if self.game_state.fullscreen:
                     info = pygame.display.Info()
                     self.assets['background'] =load_image('background.png',(info.current_w,info.current_h))
@@ -882,7 +957,7 @@ class Game:
             if self.level !=2:
                 self.clouds1.update()
                 self.clouds1.render(self.screen,(render_scroll[0]*3,3*render_scroll[1]))
-         
+            self.show_time_played()
 
 
            
@@ -895,7 +970,7 @@ class Game:
                 pygame.draw.circle(transition_surf,(255,255,255),(self.screen.get_width()//2,self.screen.get_height()//2),(30 - abs(self.transition))*8)
                 transition_surf.set_colorkey((255,255,255))
                 self.screen.blit(transition_surf,(0,0))
-
+            
             #rung lắc
             screenshake_offset = (random.random()*self.screenshake - self.screenshake/2,random.random()*self.screenshake - self.screenshake/2)   
             self.screen.blit(pygame.transform.scale(self.screen,self.screen.get_size()),screenshake_offset)    

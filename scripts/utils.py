@@ -1,6 +1,7 @@
 #tien ich
 import pygame
 import os
+import sys
 
 def draw_health_bar(screen, x, y, current_hp, max_hp,color=(0,0,0),width=200,height=20):
             # Kích thước của thanh máu
@@ -135,8 +136,8 @@ def is_top_10(file_path, new_time):
     return new_time < max(scores, key=lambda x: x[1])[1]
 
 # Hàm nhập tên trong Pygame
-def get_player_name(screen, font):
-    input_box = pygame.Rect(300, 250, 200, 50)
+def get_player_name(game,screen, font):
+    input_box = pygame.Rect(game.screen.get_width() // 2 - 110,game.screen.get_height()-100 , 200, 50)
     color_inactive = pygame.Color('lightskyblue3')
     color_active = pygame.Color('dodgerblue2')
     color = color_inactive
@@ -162,7 +163,12 @@ def get_player_name(screen, font):
                     else:
                         text += event.unicode
 
-        screen.fill((0, 0, 0))  # Xóa màn hình
+        if game.game_state.fullscreen:
+            info = pygame.display.Info()
+            game.assets['chucmung'] =load_image('chucmung.png',(info.current_w,info.current_h))
+        else:
+            game.assets['chucmung'] =load_image('chucmung.png',(1200,800))
+        game.screen.blit(game.assets['chucmung'],(0,0))
         txt_surface = font.render(text, True, color)
         width = max(200, txt_surface.get_width() + 10)
         input_box.w = width
